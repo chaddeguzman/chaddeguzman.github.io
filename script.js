@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
         actionBtn.style.background = '#4f46e5';
         
         setTimeout(() => {
-            // Replace with your desired webpage URL
-            window.location.href = 'https://www.linkedin.com/in/chad-de-guzman/';
+            // Open your desired webpage URL in a new window
+            window.open('https://www.linkedin.com/in/chad-de-guzman/', '_blank');
             
-            // Reset button text state after navigation
+            // Reset button text state
             setTimeout(() => {
                 actionBtn.textContent = 'Connect With Me';
                 actionBtn.style.background = '#6366f1';

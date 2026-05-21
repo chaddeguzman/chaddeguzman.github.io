@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Micro-interaction for Action Button click
     actionBtn.addEventListener('click', () => {
-        actionBtn.textContent = 'Opening Mail Client...';
+        actionBtn.textContent = 'Redirecting...';
         actionBtn.style.background = '#4f46e5';
         
         setTimeout(() => {
-            // Replace with your real contact string later
-            window.location.href = 'mailto:placeholder@example.com?subject=Hello';
+            // Replace with your desired webpage URL
+            window.location.href = 'YOUR_WEBPAGE_URL';
             
-            // Reset button text state after window focus returns
+            // Reset button text state after navigation
             setTimeout(() => {
                 actionBtn.textContent = 'Connect With Me';
                 actionBtn.style.background = '#6366f1';

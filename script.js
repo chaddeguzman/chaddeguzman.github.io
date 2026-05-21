@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             // Replace with your desired webpage URL
-            window.location.href = 'YOUR_WEBPAGE_URL';
+            window.location.href = 'https://www.linkedin.com/in/chad-de-guzman/';
             
             // Reset button text state after navigation
             setTimeout(() => {

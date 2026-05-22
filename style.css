@@ -270,7 +270,7 @@ img {
   width: 100%;
   aspect-ratio: 3/4;
   background: var(--surface-mid);
-  border: 1px solid var(--border-mid);
+  border: 3px solid var(--border-mid);
   display: flex;
   align-items: center;
   justify-content: center;

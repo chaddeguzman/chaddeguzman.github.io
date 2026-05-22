@@ -1,39 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chad De Guzman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-glow" id="glow"></div>
-    
-    <main class="profile-card">
-        <header class="profile-header">
-            <div class="avatar-container">
-                <div class="avatar-placeholder"></div>
-            </div>
-            <h1 class="fade-in">Chad De Guzman</h1>
-            <p class="subtitle fade-in">SAP Developer & Systems Engineer</p>
-        </header>
 
-        <section class="profile-body fade-in">
-            <p>Welcome to my corner of the web. I build clean, high-performance applications and love solving complex architectural problems. Currently focusing on AI systems, automation, and agentic workflows.</p>
-            
-            <div class="tags">
-                <span class="tag">Architecture</span>
-                <span class="tag">Automation</span>
-                <span class="tag">Backend</span>
-                <span class="tag">UI/UX</span>
-            </div>
-        </section>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-logo">CDG</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+  </nav>
 
-        <footer class="profile-footer fade-in">
-            <button class="interactive-btn" id="actionBtn">Connect With Me</button>
-        </footer>
-    </main>
+  <!-- Hero Section -->
+  <section class="hero" id="about">
+    <div class="hero-tag"> <!-- — Available For Work --> </div>
+    <h1 class="hero-title">
+      I'm <span class="highlight">Chad De Guzman</span>.<br>
+      I build things and create systems.<br>
+    </h1>
+    <p class="hero-sub">
+      SAP Developer / Systems Engineer / Creator based in Makati, Philippines.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Contact me</a>
+      <a href="#projects" class="btn btn-ghost">See my work ↓</a>
+    </div>
+    <div class="hero-line"></div>
+  </section>
 
-    <script src="script.js"></script>
+  <!-- About Section -->
+  <section class="about-section section" id="about-detail">
+    <div class="section-label">01 — About</div>
+    <div class="about-grid">
+      <div class="about-image-wrap">
+        <div class="about-image-placeholder">
+          <span>Your Photo</span>
+        </div>
+        <div class="about-image-accent"></div>
+      </div>
+      <div class="about-text">
+        <h2>A little about me</h2>
+        <p>
+          Placeholder paragraph. Write 2–3 sentences about who you are, your background, and what drives you. Keep it personal and genuine — this is where people decide if they want to work with you.
+        </p>
+        <p>
+          Placeholder paragraph. Add context about your current role, what you're learning, or what kind of projects excite you. Be specific — vague bios are forgettable.
+        </p>
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-num">00+</span>
+            <span class="stat-label">Projects done</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">00+</span>
+            <span class="stat-label">Years experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">00+</span>
+            <span class="stat-label">Happy clients</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="skills-section section" id="skills">
+    <div class="section-label">02 — Skills</div>
+    <h2>What I work with</h2>
+    <div class="skills-grid">
+      <div class="skill-card" data-delay="0">
+        <div class="skill-icon">⬡</div>
+        <h3>Skill Category</h3>
+        <p>Placeholder — e.g. Frontend Development. List your main tools or technologies in this area.</p>
+        <div class="skill-tags">
+          <span class="tag">Tool 1</span>
+          <span class="tag">Tool 2</span>
+          <span class="tag">Tool 3</span>
+        </div>
+      </div>
+      <div class="skill-card" data-delay="100">
+        <div class="skill-icon">◈</div>
+        <h3>Skill Category</h3>
+        <p>Placeholder — e.g. Backend / Data. Describe what you do in this space briefly.</p>
+        <div class="skill-tags">
+          <span class="tag">Tool 1</span>
+          <span class="tag">Tool 2</span>
+          <span class="tag">Tool 3</span>
+        </div>
+      </div>
+      <div class="skill-card" data-delay="200">
+        <div class="skill-icon">◎</div>
+        <h3>Skill Category</h3>
+        <p>Placeholder — e.g. Design / UX. Note any certifications, tools, or methodologies you use.</p>
+        <div class="skill-tags">
+          <span class="tag">Tool 1</span>
+          <span class="tag">Tool 2</span>
+          <span class="tag">Tool 3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="projects-section section" id="projects">
+    <div class="section-label">03 — Projects</div>
+    <h2>Selected work</h2>
+    <div class="projects-list">
+
+      <div class="project-item">
+        <div class="project-meta">
+          <span class="project-num">01</span>
+          <span class="project-year">20XX</span>
+        </div>
+        <div class="project-content">
+          <h3>Project Title Placeholder</h3>
+          <p>Brief description of what this project does, the problem it solves, and your role in building it. Keep it to 1–2 sentences.</p>
+          <div class="project-tags">
+            <span class="tag">Tech Used</span>
+            <span class="tag">Tech Used</span>
+          </div>
+        </div>
+        <a href="#" class="project-link" aria-label="View project">→</a>
+      </div>
+
+      <div class="project-item">
+        <div class="project-meta">
+          <span class="project-num">02</span>
+          <span class="project-year">20XX</span>
+        </div>
+        <div class="project-content">
+          <h3>Project Title Placeholder</h3>
+          <p>Brief description of what this project does, the problem it solves, and your role in building it. Keep it to 1–2 sentences.</p>
+          <div class="project-tags">
+            <span class="tag">Tech Used</span>
+            <span class="tag">Tech Used</span>
+          </div>
+        </div>
+        <a href="#" class="project-link" aria-label="View project">→</a>
+      </div>
+
+      <div class="project-item">
+        <div class="project-meta">
+          <span class="project-num">03</span>
+          <span class="project-year">20XX</span>
+        </div>
+        <div class="project-content">
+          <h3>Project Title Placeholder</h3>
+          <p>Brief description of what this project does, the problem it solves, and your role in building it. Keep it to 1–2 sentences.</p>
+          <div class="project-tags">
+            <span class="tag">Tech Used</span>
+            <span class="tag">Tech Used</span>
+          </div>
+        </div>
+        <a href="#" class="project-link" aria-label="View project">→</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section section" id="contact">
+    <div class="section-label">04 — Contact</div>
+    <div class="contact-inner">
+      <h2>Let's work together</h2>
+      <p>Have a project in mind or just want to say hello? My inbox is open.</p>
+      <a href="mailto:your@email.com" class="contact-email">your@email.com</a>
+      <div class="social-links">
+        <a href="#" class="social-link">GitHub</a>
+        <a href="#" class="social-link">LinkedIn</a>
+        <a href="#" class="social-link">Twitter / X</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>© <span id="year"></span> Your Name. Built with GitHub Pages.</span>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

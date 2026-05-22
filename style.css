@@ -335,16 +335,24 @@ img {
   border-bottom: 1px solid var(--border);
 }
 
+.skills-section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
 .skills-section .section-label {
   color: var(--ink-faint);
-  max-width: var(--max-w);
-  margin: 0 auto 2rem;
+  margin-bottom: 2rem;
 }
 
 .skills-section h2 {
   color: var(--ink);
-  max-width: var(--max-w);
-  margin: 0 auto 3rem;
+  margin-bottom: 3rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .skills-grid {
@@ -352,8 +360,6 @@ img {
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--border);
-  max-width: var(--max-w);
-  margin: 0 auto;
 }
 
 .skill-card {
@@ -361,7 +367,25 @@ img {
   padding: 2.5rem;
   opacity: 0;
   transform: translateY(20px);
-  transition: background 0.25s ease, opacity 0.5s ease, transform 0.5s ease;
+  transition: background 0.3s ease, opacity 0.5s ease, transform 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.skill-card:hover::before {
+  opacity: 1;
 }
 
 .skill-card.visible {
@@ -370,29 +394,45 @@ img {
 }
 
 .skill-card:hover {
-  background: var(--accent-glow);
+  background: rgba(168, 212, 168, 0.05);
+}
+
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .skill-icon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: var(--accent);
-  margin-bottom: 1.25rem;
+}
+
+.skill-category-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  border: 1px solid rgba(168, 212, 168, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
 }
 
 .skill-card h3 {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 400;
   color: var(--ink);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .skill-card p {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--ink-muted);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   font-weight: 300;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 .skill-tags {

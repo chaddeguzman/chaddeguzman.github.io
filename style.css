@@ -266,12 +266,17 @@ img {
   position: relative;
 }
 
-.about-image {
+.about-image-placeholder {
   width: 100%;
   aspect-ratio: 3/4;
-  object-fit: cover;
+  background: var(--surface-mid);
   border: 1px solid var(--border-mid);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
 }
 
 .about-image-accent {

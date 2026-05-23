@@ -30,9 +30,9 @@ body.light-mode {
   --ink:         #1a2e1a;
   --ink-muted:   #3d5c3d;
   --ink-faint:   #6a8a6a;
-  --surface:     #F2F0EF;
-  --surface-alt: #E9E6E4;
-  --surface-mid: #DDD9D6;
+  --surface:     #cbd5e1;
+  --surface-alt: #bfcad7;
+  --surface-mid: #b0bdc9;
   --accent:      #3a7a3a;
   --accent-dim:  #4e944e;
   --accent-glow: rgba(58, 122, 58, 0.08);
@@ -83,7 +83,7 @@ img {
 }
 
 body.light-mode .nav {
-  background: rgba(242, 240, 239, 0.92);
+  background: rgba(203, 213, 225, 0.92);
 }
 
 .nav.scrolled {
@@ -321,7 +321,7 @@ body.light-mode .theme-toggle-icon--light {
   animation: fadeIn 1s ease forwards 0.8s;
 }
 
-/* --- s --- */
+/* --- Sections --- */
 .section {
   padding: var(--section-pad);
   max-width: var(--max-w);

@@ -321,7 +321,7 @@ body.light-mode .theme-toggle-icon--light {
   animation: fadeIn 1s ease forwards 0.8s;
 }
 
-/* --- Sections --- */
+/* --- s --- */
 .section {
   padding: var(--section-pad);
   max-width: var(--max-w);
@@ -329,7 +329,7 @@ body.light-mode .theme-toggle-icon--light {
 }
 
 .section-label {
-  font-size: 0.75rem;
+  font-size: 1.50rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);

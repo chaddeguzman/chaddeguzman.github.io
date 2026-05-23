@@ -45,6 +45,12 @@ html {
   font-size: 16px;
 }
 
+/* Global overflow guard */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--surface);
@@ -321,7 +327,7 @@ body.light-mode .theme-toggle-icon--light {
   animation: fadeIn 1s ease forwards 0.8s;
 }
 
-/* --- s --- */
+/* --- Sections --- */
 .section {
   padding: var(--section-pad);
   max-width: var(--max-w);
@@ -737,7 +743,7 @@ body.light-mode .theme-toggle-icon--light {
   transform: translateY(0);
 }
 
-/* --- Responsive --- */
+/* --- Responsive: Tablet --- */
 @media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr;
@@ -753,7 +759,17 @@ body.light-mode .theme-toggle-icon--light {
   }
 }
 
+/* --- Responsive: Mobile --- */
 @media (max-width: 640px) {
+  /* Nav */
+  .nav {
+    padding: 1rem 1.25rem;
+  }
+
+  .nav.scrolled {
+    padding: 0.75rem 1.25rem;
+  }
+
   .nav-links {
     display: none;
     flex-direction: column;
@@ -775,19 +791,70 @@ body.light-mode .theme-toggle-icon--light {
     display: block;
   }
 
+  /* Hero */
+  .hero {
+    padding: 7rem 1.25rem 3rem;
+    overflow: hidden;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    word-break: break-word;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-line {
+    display: none;
+  }
+
+  /* About */
+  .about-stats {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Projects */
   .project-item {
     grid-template-columns: 60px 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
   }
 
   .project-link {
     display: none;
   }
 
-  .about-stats {
-    gap: 1.5rem;
+  /* Skills */
+  .skill-card {
+    padding: 1.75rem 1.25rem;
   }
 
-  .hero {
-    padding: 7rem 1.5rem 3rem;
+  /* Contact */
+  .contact-section {
+    padding: 5rem 1.25rem;
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  /* Global overflow guard for sections */
+  section {
+    overflow-x: hidden;
   }
 }

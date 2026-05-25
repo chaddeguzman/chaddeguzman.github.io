@@ -1187,36 +1187,36 @@ body.light-mode .theme-toggle-icon--light {
 
 /* Card layout utilizing your clean semantic border and background states */
 .j4f-card {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2.5rem;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    background: var(--surface-alt); /* Matches your exact portfolio container background */
+    border: 1px solid var(--border); /* Matches your subtle theme borders */
+    border-radius: 4px;              /* Matches the clean, sharp radius of your skills cards */
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
 }
 
 /* Linear hover glow mimicking your exact skill cards layout */
 .j4f-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .j4f-card:hover {
-  background: var(--accent-glow);
-  border-color: var(--border-mid);
-  transform: translateY(-4px);
+    background: var(--accent-glow);  /* Smoothly shifts to your theme's glow state on hover */
+    border-color: var(--border-mid);
+    transform: translateY(-4px);
 }
 
 .j4f-card:hover::before {
-  opacity: 1;
+    opacity: 1;
 }
 
 .j4f-card h3 {

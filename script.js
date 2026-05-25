@@ -41,7 +41,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 
 // --- 4. Scroll-Triggered Reveal (.reveal elements) ---
 const revealElements = document.querySelectorAll(
-  '.about-grid, .contact-inner, .footer, .project-item, .section-label, .section h2'
+  '.about-grid, .contact-inner, .footer, .project-item, .timeline-item, .section-label, .section h2'
 );
 
 // Add reveal class to these elements

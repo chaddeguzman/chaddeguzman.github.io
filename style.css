@@ -660,6 +660,117 @@ body.light-mode .theme-toggle-icon--light {
   align-self: center;
 }
 
+/* --- Just for Fun (J4F) Section --- */
+.j4f-teaser {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.j4f-teaser-text h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}
+
+.j4f-teaser-text p {
+  font-family: var(--font-body);
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+
+/* Button override adjustments if needed, extending standard framework styles */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.btn-ghost:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Previews container layout stack */
+.j4f-teaser-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Preview Placeholder Cards styling */
+.j4f-preview-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.j4f-preview-card:hover {
+  transform: translateX(4px);
+  border-color: var(--border-mid);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.j4f-preview-num {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.j4f-preview-label {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+}
+
+/* Faint modifiers styling rules */
+.j4f-preview-card--faint {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.j4f-preview-card--faint .j4f-preview-num {
+  color: var(--ink-faint);
+}
+
+.j4f-preview-card--faint .j4f-preview-label {
+  color: var(--ink-faint);
+}
+
+/* Responsive adjustment media queries breakdown */
+@media (max-width: 868px) {
+  .j4f-teaser {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
+  .j4f-teaser-text p {
+    max-width: 100%;
+  }
+}
+
 /* --- Contact Section --- */
 .contact-section {
   text-align: center;

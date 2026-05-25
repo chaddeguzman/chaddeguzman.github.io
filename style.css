@@ -1145,3 +1145,43 @@ body.light-mode .theme-toggle-icon--light {
     overflow-x: hidden;
   }
 }
+
+/* ==========================================================================
+   J4F Projects Linkage Styles (Safe additions for cross-repo use)
+   ========================================================================== */
+/* Layout wrapper to match your portfolio's standard maximum width */
+.j4f-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Flexible grid system for project cards that scales beautifully */
+.j4f-project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+/* Base style for a project showcase card */
+.j4f-card {
+    background: var(--card-bg, #ffffff); /* Falls back to white if variable isn't defined */
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.j4f-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Simple text utilities */
+.text-center {
+    text-align: center;
+}

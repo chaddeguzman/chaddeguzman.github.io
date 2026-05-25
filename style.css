@@ -1147,41 +1147,101 @@ body.light-mode .theme-toggle-icon--light {
 }
 
 /* ==========================================================================
-   J4F Projects Linkage Styles (Safe additions for cross-repo use)
+   J4F Projects Linkage Styles (Integrated Design System)
    ========================================================================== */
-/* Layout wrapper to match your portfolio's standard maximum width */
+
+/* Layout wrapper aligned with your portfolio's layout metrics */
 .j4f-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--section-pad);
 }
 
-/* Flexible grid system for project cards that scales beautifully */
+/* Page title matches your cinematic display fonts */
+.j4f-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.j4f-header p {
+  font-family: var(--font-body);
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+/* Flexible grid system scaling gracefully on mobile and desktop */
 .j4f-project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin: 40px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 40px 0;
 }
 
-/* Base style for a project showcase card */
+/* Card layout utilizing your clean semantic border and background states */
 .j4f-card {
-    background: var(--card-bg, #ffffff); /* Falls back to white if variable isn't defined */
-    border: 1px solid var(--border-color, #e0e0e0);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Linear hover glow mimicking your exact skill cards layout */
+.j4f-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .j4f-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+  background: var(--accent-glow);
+  border-color: var(--border-mid);
+  transform: translateY(-4px);
 }
 
-/* Simple text utilities */
+.j4f-card:hover::before {
+  opacity: 1;
+}
+
+.j4f-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.j4f-card:hover h3 {
+  color: var(--accent);
+}
+
+.j4f-card p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* Simple helper utility definitions */
 .text-center {
-    text-align: center;
+  text-align: center;
 }

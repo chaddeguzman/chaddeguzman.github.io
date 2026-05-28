@@ -30,7 +30,7 @@ body.light-mode {
   --ink:         #1a2e1a;
   --ink-muted:   #3d5c3d;
   --ink-faint:   #6a8a6a;
-  --surface:     #f8f4e8;
+  --surface:     #F2F0EF;
   --surface-alt: #E9E6E4;
   --surface-mid: #DDD9D6;
   --accent:      #3a7a3a;
@@ -89,7 +89,7 @@ img {
 }
 
 body.light-mode .nav {
-  background: rgba(248, 244, 232, 0.92);
+  background: rgba(242, 240, 239, 0.92);
 }
 
 .nav.scrolled {
@@ -1000,98 +1000,254 @@ body.light-mode .theme-toggle-icon--light {
   transition: color 0.2s;
 }
 
-.timeline-role:hover {
+.timeline-item:hover .timeline-role {
   color: var(--accent);
 }
 
-.timeline-description {
-  font-size: 0.95rem;
-  color: var(--ink-muted);
-  font-weight: 300;
-  line-height: 1.6;
+.timeline-company {
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
   margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
-/* --- Responsive --- */
-@media (max-width: 896px) {
+.timeline-desc {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  font-weight: 300;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.timeline-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
 
-  .nav-links {
-    gap: 1.5rem;
-  }
-
-  .nav-links a {
-    font-size: 0.75rem;
+  .about-image-wrap {
+    max-width: 340px;
   }
 
   .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .project-item {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
-  .project-meta {
+  .timeline-item {
+    gap: 1.5rem;
+  }
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 640px) {
+  /* Nav */
+  .nav {
+    padding: 1rem 1.25rem;
+  }
+
+  .nav.scrolled {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .nav-links {
     display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1.25rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 7rem 1.25rem 3rem;
+    overflow: hidden;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 9vw, 2.52rem);
+    word-break: break-word;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-line {
+    display: none;
+  }
+
+  /* About */
+  .about-stats {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Projects */
+  .project-item {
+    grid-template-columns: 60px 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
   }
 
   .project-link {
     display: none;
   }
 
-  .nav-links {
-    display: none;
+  /* Skills */
+  .skill-card {
+    padding: 1.75rem 1.25rem;
   }
 
-  .nav-toggle {
-    display: block;
+  /* Timeline */
+  .timeline-item {
+    grid-template-columns: 20px 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Contact */
+  .contact-section {
+    padding: 5rem 1.25rem;
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  /* Global overflow guard for sections */
+  section {
+    overflow-x: hidden;
   }
 }
 
-@media (max-width: 640px) {
-  .hero {
-    padding: 8rem 1.5rem 4rem;
-  }
+/* ==========================================================================
+   J4F Projects Linkage Styles (Integrated Design System)
+   ========================================================================== */
 
-  .hero-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-  }
+/* Layout wrapper aligned with your portfolio's layout metrics */
+.j4f-container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--section-pad);
+}
 
-  .section {
-    padding: 4rem 1.5rem;
-  }
+/* Page title matches your cinematic display fonts */
+.j4f-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
 
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
+.j4f-header p {
+  font-family: var(--font-body);
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
 
-  .about-stats {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+/* Flexible grid system scaling gracefully on mobile and desktop */
+.j4f-project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 40px 0;
+}
 
-  .contact-section {
-    padding: 4rem 1.5rem;
-  }
+/* Card layout utilizing your clean semantic border and background states */
+.j4f-card {
+    background: var(--surface-alt); /* Matches your exact portfolio container background */
+    border: 1px solid var(--border); /* Matches your subtle theme borders */
+    border-radius: 4px;              /* Matches the clean, sharp radius of your skills cards */
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
 
-  .nav {
-    padding: 1rem 1.5rem;
-  }
+/* Linear hover glow mimicking your exact skill cards layout */
+.j4f-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-  .nav-left {
-    gap: 1rem;
-  }
+.j4f-card:hover {
+    background: var(--accent-glow);  /* Smoothly shifts to your theme's glow state on hover */
+    border-color: var(--border-mid);
+    transform: translateY(-4px);
+}
 
-  .nav-logo {
-    font-size: 1rem;
-  }
+.j4f-card:hover::before {
+    opacity: 1;
+}
 
-  .footer {
-    padding: 1.5rem;
-  }
+.j4f-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.j4f-card:hover h3 {
+  color: var(--accent);
+}
+
+.j4f-card p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* Simple helper utility definitions */
+.text-center {
+  text-align: center;
 }

@@ -1,2 +1,6 @@
-node_modules/
-.env
+# API keys and secrets — never commit these
+config.js
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -135,13 +135,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // --- 9. AI Chatbot Widget ---
 const ChatbotConfig = {
-  // API Configuration - Replace with your actual API key and endpoint
-  apiKey: null, // Set your API key here or via environment variable
-  apiEndpoint: null, // e.g., 'https://api.anthropic.com/v1/messages' or your Supabase Edge Function URL
-  model: 'claude-3-5-sonnet-20241022', // Default model for Anthropic
+  // API Configuration
+  apiKey: 'GEMINI_API_KEY',
+  apiEndpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', 
+  model: 'gemini-1.5-flash'
 
   // Demo mode settings
-  demoMode: true, // Set to false when API key is configured
+  demoMode: false, // Set to false when API key is configured
   demoDelay: 1200, // Simulated response delay in ms
 };
 
@@ -288,8 +288,7 @@ const Chatbot = {
       return this.getDemoResponse(message);
     }
 
-    // Real API call - uncomment and configure when ready
-    /*
+// Begin of API call - uncomment and configure when ready
     try {
       const response = await fetch(ChatbotConfig.apiEndpoint, {
         method: 'POST',
@@ -314,7 +313,7 @@ const Chatbot = {
       console.error('Chatbot API Error:', error);
       return 'Sorry, I encountered an error. Please try again later.';
     }
-    */
+// End of API call
 
     return this.getDemoResponse(message);
   },

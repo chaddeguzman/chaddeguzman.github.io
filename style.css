@@ -30,7 +30,7 @@ body.light-mode {
   --ink:         #1a2e1a;
   --ink-muted:   #3d5c3d;
   --ink-faint:   #6a8a6a;
-  --surface:     #f8f4e8;
+  --surface:     #F2F0EF;
   --surface-alt: #E9E6E4;
   --surface-mid: #DDD9D6;
   --accent:      #3a7a3a;
@@ -89,7 +89,7 @@ img {
 }
 
 body.light-mode .nav {
-  background: rgba(248, 244, 232, 0.92);
+  background: rgba(242, 240, 239, 0.92);
 }
 
 .nav.scrolled {
@@ -1000,374 +1000,254 @@ body.light-mode .theme-toggle-icon--light {
   transition: color 0.2s;
 }
 
-.timeline-role:hover {
+.timeline-item:hover .timeline-role {
   color: var(--accent);
 }
 
-.timeline-description {
-  font-size: 0.95rem;
+.timeline-company {
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.timeline-desc {
+  font-size: 0.9rem;
   color: var(--ink-muted);
   font-weight: 300;
-  line-height: 1.6;
-  margin-bottom: 0.75rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
 }
 
-/* --- Chatbot Widget --- */
-#chatbot-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1000;
-  font-family: var(--font-body);
-}
-
-#chatbot-toggle {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  cursor: pointer;
+.timeline-tags {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-}
-
-#chatbot-toggle:hover {
-  transform: scale(1.08);
-  background: var(--accent-dim);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
-}
-
-#chatbot-toggle.chatbot-open {
-  transform: rotate(90deg);
-}
-
-.chatbot-icon,
-.chatbot-close-icon {
-  position: absolute;
-  color: var(--surface);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.chatbot-close-icon {
-  font-size: 28px;
-  opacity: 0;
-  transform: rotate(-90deg);
-}
-
-#chatbot-toggle.chatbot-open .chatbot-icon {
-  opacity: 0;
-  transform: rotate(90deg);
-}
-
-#chatbot-toggle.chatbot-open .chatbot-close-icon {
-  opacity: 1;
-  transform: rotate(0deg);
-}
-
-#chatbot-widget {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  width: 360px;
-  max-height: 500px;
-  background: var(--surface-alt);
-  border: 1px solid var(--border-mid);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px) scale(0.95);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-  overflow: hidden;
-}
-
-#chatbot-widget.chatbot-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-.chatbot-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.25rem;
-  background: var(--surface-mid);
-  border-bottom: 1px solid var(--border);
-}
-
-.chatbot-header h3 {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--ink);
-  margin: 0;
-}
-
-#chatbot-minimize {
-  background: none;
-  border: none;
-  color: var(--ink-muted);
-  cursor: pointer;
-  font-size: 1.25rem;
-  padding: 0;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-
-#chatbot-minimize:hover {
-  color: var(--accent);
-  background: var(--accent-glow);
-}
-
-#chatbot-messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-height: 250px;
-  max-height: 350px;
-}
-
-.chatbot-message {
-  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  animation: messageSlide 0.3s ease;
 }
 
-@keyframes messageSlide {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.chatbot-message-user {
-  justify-content: flex-end;
-}
-
-.chatbot-message-user .chatbot-message-text {
-  background: var(--accent);
-  color: var(--surface);
-  border-radius: 16px 16px 4px 16px;
-}
-
-.chatbot-message-ai .chatbot-message-text {
-  background: var(--surface-mid);
-  color: var(--ink);
-  border-radius: 16px 16px 16px 4px;
-}
-
-.chatbot-message-text {
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  max-width: 75%;
-  word-wrap: break-word;
-}
-
-.chatbot-typing {
-  display: flex;
-  gap: 4px;
-  padding: 0.75rem 1rem;
-  background: var(--surface-mid);
-  border-radius: 16px;
-  width: fit-content;
-  animation: messageSlide 0.3s ease;
-}
-
-.chatbot-typing-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--ink-muted);
-  border-radius: 50%;
-  animation: typingBounce 1.4s infinite ease-in-out;
-}
-
-.chatbot-typing-dot:nth-child(1) { animation-delay: 0s; }
-.chatbot-typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.chatbot-typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-6px); }
-}
-
-.chatbot-input-container {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: var(--surface-mid);
-  border-top: 1px solid var(--border);
-}
-
-#chatbot-input {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-mid);
-  border-radius: 20px;
-  background: var(--surface);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-#chatbot-input:focus {
-  border-color: var(--accent);
-}
-
-#chatbot-input::placeholder {
-  color: var(--ink-faint);
-}
-
-#chatbot-send {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--surface);
-  transition: background 0.2s ease, transform 0.2s ease;
-  flex-shrink: 0;
-}
-
-#chatbot-send:hover {
-  background: var(--accent-dim);
-  transform: scale(1.05);
-}
-
-#chatbot-send:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Chatbot Mobile Responsive */
-@media (max-width: 640px) {
-  #chatbot-toggle {
-    width: 52px;
-    height: 52px;
-    bottom: 16px;
-    right: 16px;
-  }
-
-  #chatbot-widget {
-    width: calc(100vw - 32px);
-    max-width: 360px;
-    right: -8px;
-    bottom: 62px;
-    max-height: 450px;
-  }
-
-  #chatbot-messages {
-    min-height: 200px;
-    max-height: 300px;
-  }
-}
-
-/* --- Responsive --- */
-@media (max-width: 896px) {
+/* --- Responsive: Mobile --- */
+@media (max-width: 900px) {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
 
-  .nav-links {
-    gap: 1.5rem;
-  }
-
-  .nav-links a {
-    font-size: 0.75rem;
+  .about-image-wrap {
+    max-width: 340px;
   }
 
   .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .project-item {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
-  .project-meta {
+  .timeline-item {
+    gap: 1.5rem;
+  }
+}
+
+/* --- Responsive: Mobile --- */
+@media (max-width: 640px) {
+  /* Nav */
+  .nav {
+    padding: 1rem 1.25rem;
+  }
+
+  .nav.scrolled {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .nav-links {
     display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1.25rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 7rem 1.25rem 3rem;
+    overflow: hidden;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 9vw, 2.52rem);
+    word-break: break-word;
+  }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-line {
+    display: none;
+  }
+
+  /* About */
+  .about-stats {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Projects */
+  .project-item {
+    grid-template-columns: 60px 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
   }
 
   .project-link {
     display: none;
   }
 
-  .nav-links {
-    display: none;
+  /* Skills */
+  .skill-card {
+    padding: 1.75rem 1.25rem;
   }
 
-  .nav-toggle {
-    display: block;
+  /* Timeline */
+  .timeline-item {
+    grid-template-columns: 20px 1fr;
+    gap: 1.25rem;
+  }
+
+  /* Contact */
+  .contact-section {
+    padding: 5rem 1.25rem;
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  /* Global overflow guard for sections */
+  section {
+    overflow-x: hidden;
   }
 }
 
-@media (max-width: 640px) {
-  .hero {
-    padding: 8rem 1.5rem 4rem;
-  }
+/* ==========================================================================
+   J4F Projects Linkage Styles (Integrated Design System)
+   ========================================================================== */
 
-  .hero-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-  }
+/* Layout wrapper aligned with your portfolio's layout metrics */
+.j4f-container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--section-pad);
+}
 
-  .section {
-    padding: 4rem 1.5rem;
-  }
+/* Page title matches your cinematic display fonts */
+.j4f-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
 
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
+.j4f-header p {
+  font-family: var(--font-body);
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
 
-  .about-stats {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+/* Flexible grid system scaling gracefully on mobile and desktop */
+.j4f-project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 40px 0;
+}
 
-  .contact-section {
-    padding: 4rem 1.5rem;
-  }
+/* Card layout utilizing your clean semantic border and background states */
+.j4f-card {
+    background: var(--surface-alt); /* Matches your exact portfolio container background */
+    border: 1px solid var(--border); /* Matches your subtle theme borders */
+    border-radius: 4px;              /* Matches the clean, sharp radius of your skills cards */
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
 
-  .nav {
-    padding: 1rem 1.5rem;
-  }
+/* Linear hover glow mimicking your exact skill cards layout */
+.j4f-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-  .nav-left {
-    gap: 1rem;
-  }
+.j4f-card:hover {
+    background: var(--accent-glow);  /* Smoothly shifts to your theme's glow state on hover */
+    border-color: var(--border-mid);
+    transform: translateY(-4px);
+}
 
-  .nav-logo {
-    font-size: 1rem;
-  }
+.j4f-card:hover::before {
+    opacity: 1;
+}
 
-  .footer {
-    padding: 1.5rem;
-  }
+.j4f-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.j4f-card:hover h3 {
+  color: var(--accent);
+}
+
+.j4f-card p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+/* Simple helper utility definitions */
+.text-center {
+  text-align: center;
 }

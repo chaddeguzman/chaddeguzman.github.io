@@ -136,7 +136,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // --- 9. AI Chatbot Widget ---
 const ChatbotConfig = {
   // API Configuration
-  apiKey: 'GEMINI_API_KEY',
+  apiKey: 'AQ.Ab8RN6J7XW2Q3k2yep5veWRMKuY3A50nAbv_VfXcT1CmZMeQaA',
   apiEndpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', 
   model: 'gemini-1.5-flash'
 

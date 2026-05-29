@@ -378,6 +378,79 @@
     <span>© <span id="year"></span> Chad De Guzman.</span>
   </footer>
 
+  <script src="config.js"></script>
   <script src="script.js"></script>
+
+  <!-- AI Chatbot Widget -->
+  <div class="chat-widget" id="chatWidget">
+
+    <!-- Bubble Toggle Button -->
+    <button class="chat-bubble" id="chatBubble" aria-label="Open chat">
+      <span class="chat-bubble-icon chat-bubble-icon--open">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </span>
+      <span class="chat-bubble-icon chat-bubble-icon--close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </span>
+      <span class="chat-bubble-pulse"></span>
+    </button>
+
+    <!-- Chat Panel -->
+    <div class="chat-panel" id="chatPanel" aria-hidden="true">
+      <div class="chat-panel-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">CDG</div>
+          <div>
+            <div class="chat-header-name">Chad's AI Assistant</div>
+            <div class="chat-header-status">
+              <span class="chat-status-dot"></span> Online
+            </div>
+          </div>
+        </div>
+        <button class="chat-close-btn" id="chatCloseBtn" aria-label="Close chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-message chat-message--bot">
+          <div class="chat-bubble-msg">
+            Hey! I'm Chad's AI assistant. Ask me anything about his work, skills, or projects. 👋
+          </div>
+        </div>
+        <div class="chat-suggestions" id="chatSuggestions">
+          <button class="chat-suggestion-chip" onclick="sendSuggestion(this)">What does Chad do?</button>
+          <button class="chat-suggestion-chip" onclick="sendSuggestion(this)">What are his skills?</button>
+          <button class="chat-suggestion-chip" onclick="sendSuggestion(this)">View his projects</button>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea
+            id="chatInput"
+            class="chat-input"
+            placeholder="Ask me anything..."
+            rows="1"
+            aria-label="Chat message input"
+          ></textarea>
+          <button class="chat-send-btn" id="chatSendBtn" aria-label="Send message">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="chat-footer-note">Powered by Claude · Ask about Chad's work</div>
+      </div>
+    </div>
+
+  </div>
+
 </body>
 </html>

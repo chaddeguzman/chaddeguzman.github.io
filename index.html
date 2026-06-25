@@ -9,11 +9,54 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="features.css">
 </head>
 <body>
 
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Command Palette -->
+  <div class="command-palette-overlay" id="commandPaletteOverlay" aria-hidden="true">
+    <div class="command-palette" role="dialog" aria-modal="true" aria-labelledby="commandPaletteTitle">
+      <div class="command-palette-header">
+        <span class="command-key">/</span>
+        <input class="command-palette-input" id="commandPaletteInput" type="text" placeholder="Jump to a section or feature" autocomplete="off" aria-labelledby="commandPaletteTitle">
+        <button class="command-palette-close" id="commandPaletteClose" type="button" aria-label="Close command palette">Esc</button>
+      </div>
+      <div class="command-palette-list" id="commandPaletteList">
+        <button class="command-palette-item is-active" type="button" data-target="#about" data-label="About" data-keywords="intro hero chad">
+          <span><strong>About</strong><span>Go to the hero introduction</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#about-detail" data-label="About Detail" data-keywords="reading mode story profile biography">
+          <span><strong>About Detail</strong><span>Read the longer profile section</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#skills" data-label="Skills" data-keywords="tech stack frontend backend ai sap">
+          <span><strong>Skills</strong><span>View the tech stack</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#experience" data-label="Experience" data-keywords="timeline work history career">
+          <span><strong>Experience</strong><span>View the work timeline</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#projects" data-label="Projects" data-keywords="highlights portfolio sap invoicing">
+          <span><strong>Projects</strong><span>View project highlights</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#j4f" data-label="J4F" data-keywords="fun sandbox experiments games">
+          <span><strong>J4F</strong><span>Explore side experiments</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+        <button class="command-palette-item" type="button" data-target="#contact" data-label="Contact" data-keywords="email github linkedin instagram">
+          <span><strong>Contact</strong><span>Find contact and social links</span></span>
+          <span class="command-key">Enter</span>
+        </button>
+      </div>
+      <p class="command-palette-empty" id="commandPaletteEmpty">No matching section found.</p>
+    </div>
+  </div>
 
   <!-- Navigation -->
   <nav class="nav">
@@ -27,13 +70,17 @@
           </span>
         </span>
       </button>
+      <button class="command-palette-trigger" type="button" data-command-open aria-label="Open command palette">
+        <span class="command-palette-trigger__key">/</span>
+        <span>Search</span>
+      </button>
     </div>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
-	  <li><a href="#j4f">J4F</a></li>
+      <li><a href="#j4f">J4F</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
@@ -72,7 +119,13 @@
         <div class="about-image-accent"></div>
       </div>
       <div class="about-text">
-        <h2>About Me</h2>
+        <div class="about-heading-row">
+          <h2>About Me</h2>
+          <button class="reading-mode-toggle" id="readingModeToggle" type="button" aria-pressed="false">
+            <span class="reading-mode-toggle__key">Aa</span>
+            <span class="reading-mode-toggle__text">Reading Mode</span>
+          </button>
+        </div>
         <p>
           I'm a full-stack software engineer who loves building systems and actual, hands-on tools that solve real-world problems.
           Over 15 years, I've moved from enterprise SAP rollouts serving millions of users to full-stack builds where I wore every hat
@@ -151,8 +204,8 @@
             <span class="tag">LLM Wiki</span>
             <span class="tag">Claude</span>
             <span class="tag">Gemini</span>
-			<span class="tag">Bolt</span>
-			<span class="tag">Rovo</span>
+            <span class="tag">Bolt</span>
+            <span class="tag">Rovo</span>
             <span class="tag">Copilot</span>
             <span class="tag">Workflow Design</span>
           </div>
@@ -234,7 +287,7 @@
             <span class="tag">ABAP-HR</span>
             <span class="tag">Data Conversion</span>
             <span class="tag">HCM</span>
-			  <span class="tag">RE-FX</span>
+            <span class="tag">RE-FX</span>
             <span class="tag">FICO</span>
             <span class="tag">MM</span>
             <span class="tag">PS</span>
@@ -294,7 +347,7 @@
         <a href="#" class="project-link" aria-label="View project">→</a>
       </div>
 
-            <div class="project-item">
+      <div class="project-item">
         <div class="project-meta">
           <span class="project-num">02</span>
           <span class="project-year">2023</span>
@@ -391,5 +444,6 @@
   </footer>
 
   <script src="script.js"></script>
+  <script src="features.js"></script>
 </body>
 </html>

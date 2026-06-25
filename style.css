@@ -229,6 +229,15 @@ body.light-mode .theme-toggle-icon--light {
   width: 100%;
 }
 
+.nav-links a.nav-active {
+  opacity: 1;
+  color: var(--nav-text);
+}
+
+.nav-links a.nav-active::after {
+  width: 100%;
+}
+
 .nav-toggle {
   display: none;
   background: none;
@@ -275,8 +284,7 @@ body.light-mode .theme-toggle-icon--light {
 .hero-title .highlight {
   color: var(--accent);
   font-style: italic;
-/* text-shadow: 0 0 40px rgba(168, 212, 168, 0.2); 
-*/
+  text-shadow: 0 0 40px rgba(168, 212, 168, 0.2);
 }
 
 .hero-sub {

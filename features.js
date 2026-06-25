@@ -43,7 +43,11 @@ function visibleCommandItems() {
 
 function setActiveCommand(index) {
   const visibleItems = visibleCommandItems();
-  if (!visibleItems.length) return;
+  if (!visibleItems.length) {
+    activeCommandIndex = 0;
+    commandPaletteItems.forEach(item => item.classList.remove('is-active'));
+    return;
+  }
 
   activeCommandIndex = Math.max(0, Math.min(index, visibleItems.length - 1));
   commandPaletteItems.forEach(item => item.classList.remove('is-active'));
@@ -104,17 +108,23 @@ if (commandPaletteInput) {
 
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      setActiveCommand((activeCommandIndex + 1) % visibleItems.length);
+      if (visibleItems.length) {
+        setActiveCommand((activeCommandIndex + 1) % visibleItems.length);
+      }
     }
 
     if (event.key === 'ArrowUp') {
       event.preventDefault();
-      setActiveCommand((activeCommandIndex - 1 + visibleItems.length) % visibleItems.length);
+      if (visibleItems.length) {
+        setActiveCommand((activeCommandIndex - 1 + visibleItems.length) % visibleItems.length);
+      }
     }
 
     if (event.key === 'Enter') {
       event.preventDefault();
-      goToCommandTarget(visibleItems[activeCommandIndex]);
+      if (visibleItems.length) {
+        goToCommandTarget(visibleItems[activeCommandIndex]);
+      }
     }
   });
 }

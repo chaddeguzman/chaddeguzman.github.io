@@ -108,6 +108,13 @@ body.light-mode .nav {
   font-size: 1.1rem;
   letter-spacing: 0.05em;
   color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.nav-logo:hover {
+  transform: scale(1.05);
 }
 
 /* --- Theme Toggle Button --- */

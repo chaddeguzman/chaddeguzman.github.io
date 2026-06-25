@@ -49,6 +49,19 @@ html {
   font-size: 16px;
 }
 
+/* --- Scroll Progress Bar --- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  z-index: 200;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 8px rgba(168, 212, 168, 0.4);
+}
+
 /* Global overflow guard */
 html, body {
   max-width: 100%;
@@ -221,20 +234,12 @@ body.light-mode .theme-toggle-icon--light {
   color: var(--nav-text);
 }
 
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.nav-links a.nav-active {
+.nav-links a.active {
   opacity: 1;
   color: var(--nav-text);
 }
 
-.nav-links a.nav-active::after {
+.nav-links a.active::after {
   width: 100%;
 }
 
@@ -816,8 +821,46 @@ body.light-mode .theme-toggle-icon--light {
   margin-bottom: 2rem;
 }
 
-.contact-email {
-  display: inline-block;
+.contact-email-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.copy-email-btn {
+  background: none;
+  border: 1px solid var(--border-mid);
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.copy-email-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.copy-email-btn.copied {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.copy-email-btn .copy-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 3.5vw, 2.2rem);
   font-weight: 400;

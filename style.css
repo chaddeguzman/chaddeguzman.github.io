@@ -275,7 +275,8 @@ body.light-mode .theme-toggle-icon--light {
 .hero-title .highlight {
   color: var(--accent);
   font-style: italic;
-  text-shadow: 0 0 40px rgba(168, 212, 168, 0.2);
+/* text-shadow: 0 0 40px rgba(168, 212, 168, 0.2); 
+*/
 }
 
 .hero-sub {

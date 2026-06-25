@@ -1,4 +1,4 @@
-# Chad de Guzman - Personal Portfolio
+# Chad de Guzman - Online Portfolio
 
 A modern, responsive portfolio website showcasing my work, skills, and experience.
 

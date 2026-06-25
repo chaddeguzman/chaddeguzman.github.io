@@ -17,6 +17,8 @@
   --accent-glow: rgba(168, 212, 168, 0.08);
   --border:      rgba(168, 212, 168, 0.1);
   --border-mid:  rgba(168, 212, 168, 0.18);
+  --nav-bg:      #d4f0d4;
+  --nav-text:    #2a5a2a;
 
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
@@ -38,6 +40,8 @@ body.light-mode {
   --accent-glow: rgba(58, 122, 58, 0.08);
   --border:      rgba(58, 122, 58, 0.15);
   --border-mid:  rgba(58, 122, 58, 0.25);
+  --nav-bg:      #e4f8e4;
+  --nav-text:    #1a4a1a;
 }
 
 html {
@@ -81,15 +85,9 @@ img {
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 2.5rem;
-  background: rgba(13, 17, 13, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-  transition: padding 0.3s ease, background 0.4s ease;
-}
-
-body.light-mode .nav {
-  background: rgba(242, 240, 239, 0.92);
+  background: var(--nav-bg);
+  border-bottom: 1px solid rgba(42, 90, 42, 0.15);
+  transition: padding 0.3s ease;
 }
 
 .nav.scrolled {
@@ -107,7 +105,7 @@ body.light-mode .nav {
   font-weight: 700;
   font-size: 1.1rem;
   letter-spacing: 0.05em;
-  color: var(--accent);
+  color: var(--nav-text);
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
@@ -115,6 +113,7 @@ body.light-mode .nav {
 
 .nav-logo:hover {
   transform: scale(1.05);
+  color: var(--accent-dim);
 }
 
 /* --- Theme Toggle Button --- */
@@ -123,7 +122,7 @@ body.light-mode .nav {
   border: none;
   cursor: pointer;
   padding: 0.2rem 0;
-  color: var(--ink-muted);
+  color: var(--nav-text);
 }
 
 .theme-toggle-track {
@@ -200,8 +199,9 @@ body.light-mode .theme-toggle-icon--light {
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink-muted);
-  transition: color 0.2s;
+  color: var(--nav-text);
+  opacity: 0.8;
+  transition: color 0.2s, opacity 0.2s;
   position: relative;
 }
 
@@ -212,12 +212,17 @@ body.light-mode .theme-toggle-icon--light {
   left: 0;
   width: 0;
   height: 1px;
-  background: var(--accent);
+  background: var(--nav-text);
   transition: width 0.25s ease;
 }
 
 .nav-links a:hover {
-  color: var(--accent);
+  opacity: 1;
+  color: var(--nav-text);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-links a:hover::after {
@@ -230,7 +235,7 @@ body.light-mode .theme-toggle-icon--light {
   border: none;
   font-size: 1.25rem;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--nav-text);
 }
 
 /* --- Hero --- */
@@ -1071,9 +1076,9 @@ body.light-mode .theme-toggle-icon--light {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--surface);
+    background: var(--nav-bg);
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(42, 90, 42, 0.15);
     gap: 1.25rem;
   }
 

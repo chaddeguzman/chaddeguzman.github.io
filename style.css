@@ -17,7 +17,7 @@
   --accent-glow: rgba(168, 212, 168, 0.08);
   --border:      rgba(168, 212, 168, 0.1);
   --border-mid:  rgba(168, 212, 168, 0.18);
-  --nav-bg:      #2a5a2a;
+  --nav-bg:      #314e31;
   --nav-text:    #d4f0d4;
 
   --font-display: 'Playfair Display', Georgia, serif;
@@ -40,7 +40,7 @@ body.light-mode {
   --accent-glow: rgba(58, 122, 58, 0.08);
   --border:      rgba(58, 122, 58, 0.15);
   --border-mid:  rgba(58, 122, 58, 0.25);
-  --nav-bg:      #2a5a2a;
+  --nav-bg:      #314e31;
   --nav-text:    #d4f0d4;
 }
 

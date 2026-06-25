@@ -17,8 +17,8 @@
   --accent-glow: rgba(168, 212, 168, 0.08);
   --border:      rgba(168, 212, 168, 0.1);
   --border-mid:  rgba(168, 212, 168, 0.18);
-  --nav-bg:      #d4f0d4;
-  --nav-text:    #2a5a2a;
+  --nav-bg:      #2a5a2a;
+  --nav-text:    #d4f0d4;
 
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
@@ -29,19 +29,19 @@
 
 /* --- Light Mode Variables --- */
 body.light-mode {
-  --ink:         #1a2e1a;
-  --ink-muted:   #3d5c3d;
-  --ink-faint:   #6a8a6a;
-  --surface:     #F2F0EF;
-  --surface-alt: #E9E6E4;
-  --surface-mid: #DDD9D6;
-  --accent:      #3a7a3a;
-  --accent-dim:  #4e944e;
-  --accent-glow: rgba(58, 122, 58, 0.08);
-  --border:      rgba(58, 122, 58, 0.15);
-  --border-mid:  rgba(58, 122, 58, 0.25);
-  --nav-bg:      #e4f8e4;
-  --nav-text:    #1a4a1a;
+  --ink:         #e8ede8;
+  --ink-muted:   #8a9e8a;
+  --ink-faint:   #4a5e4a;
+  --surface:     #0d110d;
+  --surface-alt: #131813;
+  --surface-mid: #1a211a;
+  --accent:      #a8d4a8;
+  --accent-dim:  #6aaa6a;
+  --accent-glow: rgba(168, 212, 168, 0.08);
+  --border:      rgba(168, 212, 168, 0.1);
+  --border-mid:  rgba(168, 212, 168, 0.18);
+  --nav-bg:      #2a5a2a;
+  --nav-text:    #d4f0d4;
 }
 
 html {

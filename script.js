@@ -93,9 +93,10 @@ const sectionObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       const id = entry.target.getAttribute('id');
       navLinkItems.forEach(link => {
-        link.classList.remove('nav-active');
+        link.classList.remove('active');
+        link.style.color = '';
         if (link.getAttribute('href') === `#${id}`) {
-          link.classList.add('nav-active');
+          link.classList.add('active');
         }
       });
     }
@@ -121,7 +122,33 @@ projectItems.forEach(item => {
 });
 
 
-// --- 8. Smooth Scroll Polyfill for older browsers ---
+// --- 9. Scroll Progress Bar ---
+const scrollProgress = document.getElementById('scrollProgress');
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  scrollProgress.style.width = progress + '%';
+}, { passive: true });
+
+
+// --- 10. Copy Email Button ---
+const copyEmailBtn = document.getElementById('copyEmailBtn');
+const copyLabel = document.getElementById('copyLabel');
+
+if (copyEmailBtn) {
+  copyEmailBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText('chadsama.27@email.com').then(() => {
+      copyLabel.textContent = 'Copied!';
+      copyEmailBtn.classList.add('copied');
+      setTimeout(() => {
+        copyLabel.textContent = 'Copy';
+        copyEmailBtn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+}
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     const target = document.querySelector(this.getAttribute('href'));

@@ -98,6 +98,51 @@ body.reading-mode-active .about-text em {
   font-style: normal;
 }
 
+/* Remove Hero background overlay */
+.hero::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Alternating section backgrounds */
+.hero.surface-alt,
+.skills-section,
+.projects-section.surface-alt,
+.contact-section.surface-alt {
+  background: var(--surface) !important;
+}
+
+.about-section,
+.experience-section {
+  position: relative;
+  z-index: 0;
+}
+
+.about-section::before,
+.experience-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--surface-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  z-index: -1;
+}
+
+.about-section > *,
+.experience-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.j4f-teaser-section.surface-alt {
+  background: var(--surface-alt) !important;
+}
+
 @media (max-width: 900px) {
   .about-heading-row {
     align-items: flex-start;

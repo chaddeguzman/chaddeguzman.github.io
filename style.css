@@ -947,40 +947,38 @@ body.light-mode .hero::after {
 /* --- Section Dividers --- */
 .section-divider {
   width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  height: 40px;
+  height: 1px;
+  background: var(--accent-dim);
+  opacity: 0.35;
+  box-shadow: 0 0 8px 1px var(--accent-dim), 0 0 20px 2px rgba(106, 170, 106, 0.2);
   pointer-events: none;
 }
 
-.section-divider svg {
-  display: block;
-  width: 100%;
-  height: 40px;
+body.light-mode .section-divider {
+  opacity: 0.5;
+  box-shadow: 0 0 6px 1px var(--accent-dim), 0 0 14px 2px rgba(78, 148, 78, 0.18);
 }
 
-.divider-line {
-  stroke: var(--accent-dim);
-  stroke-width: 1;
-  opacity: 0.25;
+/* Full-bleed surface-alt background for alternating sections */
+.surface-alt {
+  background: var(--surface-alt) !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 
-body.light-mode .divider-line {
-  opacity: 0.35;
+.surface-alt .projects-list,
+.surface-alt .contact-inner,
+.surface-alt .j4f-teaser {
+  max-width: var(--max-w);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.divider-fill {
-  fill: var(--surface);
-  opacity: 0;
-}
-
-.divider-fill--alt {
-  fill: var(--surface-alt);
-  opacity: 0;
-}
-
-.section-divider--flip svg {
-  transform: scaleX(-1);
+.surface-alt > .section-label,
+.surface-alt > h2 {
+  max-width: var(--max-w);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Animations --- */

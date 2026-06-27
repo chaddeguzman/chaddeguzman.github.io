@@ -159,6 +159,25 @@ body.reading-mode-active .about-text em {
   background: var(--surface-alt) !important;
 }
 
+/* Explicit light mode alternating backgrounds */
+body.light-mode .hero,
+body.light-mode .hero.surface-alt,
+body.light-mode .skills-section,
+body.light-mode .projects-section.surface-alt,
+body.light-mode .contact-section.surface-alt {
+  background: var(--surface) !important;
+  background-image: none !important;
+}
+
+body.light-mode .about-section::before,
+body.light-mode .experience-section::before {
+  background: var(--surface-alt) !important;
+}
+
+body.light-mode .j4f-teaser-section.surface-alt {
+  background: var(--surface-alt) !important;
+}
+
 @media (max-width: 900px) {
   .about-heading-row {
     align-items: flex-start;

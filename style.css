@@ -262,6 +262,17 @@ body.light-mode .theme-toggle-icon--light {
   max-width: var(--max-w);
   margin: 0 auto;
   position: relative;
+  box-sizing: border-box;
+}
+
+.hero.surface-alt {
+  max-width: 100%;
+  align-items: center;
+}
+
+.hero.surface-alt > * {
+  width: 100%;
+  max-width: var(--max-w);
 }
 
 .hero::after {

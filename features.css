@@ -98,6 +98,41 @@ body.reading-mode-active .about-text em {
   font-style: normal;
 }
 
+/* Alternating Section Backgrounds */
+.hero,
+.projects-section,
+.contact-section {
+  position: relative;
+  z-index: 0;
+}
+
+.hero::before,
+.projects-section::before,
+.contact-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--surface-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  z-index: -1;
+}
+
+.hero::before {
+  border-top: none;
+}
+
+.hero > *,
+.projects-section > *,
+.contact-section > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Soft Glowing Section Dividers */
 .section-divider {
   position: relative;

@@ -98,14 +98,30 @@ body.reading-mode-active .about-text em {
   font-style: normal;
 }
 
-/* Remove Hero background overlay */
+/* Remove all Hero background glow effects */
+.hero,
+.hero.surface-alt {
+  background: var(--surface) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.hero::before,
 .hero::after {
   content: none !important;
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.hero-line {
   display: none !important;
 }
 
 /* Alternating section backgrounds */
-.hero.surface-alt,
 .skills-section,
 .projects-section.surface-alt,
 .contact-section.surface-alt {

@@ -1009,6 +1009,14 @@ body.light-mode .hero::after {
   gap: 1rem;
 }
 
+.github-repo-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
 .github-repo-card {
   display: flex;
   min-height: 10rem;

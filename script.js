@@ -176,11 +176,61 @@ async function updateGithubStats() {
       ? repos.reduce((total, repo) => total + (Number(repo.stargazers_count) || 0), 0)
       : 0;
 
+    renderGithubRepos(repos);
     setStatText('githubRepoCount', publicRepoCount);
     setStatText('githubStarCount', starCount);
   } catch (error) {
     portfolioStats.title = 'GitHub stats are temporarily unavailable.';
+    renderGithubRepoStatus('Repositories are temporarily unavailable.');
   }
+}
+
+function renderGithubRepos(repos) {
+  const repoList = document.getElementById('githubRepoList');
+  if (!repoList || !Array.isArray(repos)) return;
+
+  const visibleRepos = repos.filter(repo => (
+    !repo.fork && repo.name !== 'chaddeguzman.github.io'
+  ));
+
+  if (!visibleRepos.length) {
+    renderGithubRepoStatus('No public repositories found.');
+    return;
+  }
+
+  repoList.innerHTML = '';
+
+  visibleRepos.forEach(repo => {
+    const card = document.createElement('a');
+    const language = repo.language || 'Repository';
+    const description = repo.description || 'Public GitHub repository.';
+
+    card.className = 'github-repo-card';
+    card.href = repo.html_url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.setAttribute('aria-label', `View ${repo.name} on GitHub`);
+
+    card.appendChild(createRepoCardText('span', 'github-repo-meta', language));
+    card.appendChild(createRepoCardText('span', 'github-repo-name', repo.name));
+    card.appendChild(createRepoCardText('span', 'github-repo-desc', description));
+    repoList.appendChild(card);
+  });
+}
+
+function renderGithubRepoStatus(message) {
+  const repoList = document.getElementById('githubRepoList');
+  if (!repoList) return;
+
+  repoList.innerHTML = '';
+  repoList.appendChild(createRepoCardText('p', 'github-repo-status', message));
+}
+
+function createRepoCardText(tagName, className, text) {
+  const element = document.createElement(tagName);
+  element.className = className;
+  element.textContent = text;
+  return element;
 }
 
 async function fetchGithubJson(url) {

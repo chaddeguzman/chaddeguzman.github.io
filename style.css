@@ -47,12 +47,32 @@ body.light-mode {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  scrollbar-width: none;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-color: #6aaa6a transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
+html::-webkit-scrollbar {
+  width: 0.65rem;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #6aaa6a;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #a8d4a8;
+  background-clip: padding-box;
 }
 
 /* --- Scroll Progress Bar --- */
@@ -69,9 +89,8 @@ body::-webkit-scrollbar {
 }
 
 /* Global overflow guard */
-html, body {
+body {
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 body {
@@ -79,8 +98,6 @@ body {
   background-color: var(--surface);
   color: var(--ink);
   line-height: 1.7;
-  overflow-x: hidden;
-  scrollbar-width: none;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 

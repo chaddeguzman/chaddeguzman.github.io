@@ -35,6 +35,10 @@
   transition: none;
 }
 
+.chadbot-dragging {
+  will-change: left, top;
+}
+
 .chadbot-dragging .chadbot-launcher:hover {
   transform: none;
 }

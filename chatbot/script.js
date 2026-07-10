@@ -16,6 +16,7 @@
   const dragThreshold = 6;
   const viewportMargin = 8;
   let dragState = null;
+  let dragFrameId = 0;
   let ignoreClicksUntil = 0;
 
   launcher.addEventListener('click', event => {
@@ -76,6 +77,10 @@
       startY: event.clientY,
       startLeft: rect.left,
       startTop: rect.top,
+      nextLeft: rect.left,
+      nextTop: rect.top,
+      maxLeft: Math.max(viewportMargin, window.innerWidth - rect.width - viewportMargin),
+      maxTop: Math.max(viewportMargin, window.innerHeight - rect.height - viewportMargin),
       moved: false
     };
 
@@ -94,23 +99,26 @@
     dragState.moved = true;
     event.preventDefault();
 
-    const maxLeft = Math.max(viewportMargin, window.innerWidth - root.offsetWidth - viewportMargin);
-    const maxTop = Math.max(viewportMargin, window.innerHeight - root.offsetHeight - viewportMargin);
-    const left = clamp(dragState.startLeft + deltaX, viewportMargin, maxLeft);
-    const top = clamp(dragState.startTop + deltaY, viewportMargin, maxTop);
+    dragState.nextLeft = clamp(dragState.startLeft + deltaX, viewportMargin, dragState.maxLeft);
+    dragState.nextTop = clamp(dragState.startTop + deltaY, viewportMargin, dragState.maxTop);
 
-    root.style.left = `${left}px`;
-    root.style.top = `${top}px`;
-    root.style.right = 'auto';
-    root.style.bottom = 'auto';
-
-    if (!panel.hidden) positionPanel();
+    if (!dragFrameId) {
+      dragFrameId = window.requestAnimationFrame(renderDragFrame);
+    }
   }
 
   function finishDrag(event) {
     if (!dragState || event.pointerId !== dragState.pointerId) return;
 
     const wasMoved = dragState.moved;
+
+    if (dragFrameId) {
+      window.cancelAnimationFrame(dragFrameId);
+      dragFrameId = 0;
+    }
+
+    if (wasMoved) applyDragPosition(dragState);
+
     dragState = null;
     root.classList.remove('chadbot-dragging');
 
@@ -121,6 +129,21 @@
     if (wasMoved) {
       ignoreClicksUntil = performance.now() + 500;
     }
+  }
+
+  function renderDragFrame() {
+    dragFrameId = 0;
+    if (!dragState?.moved) return;
+    applyDragPosition(dragState);
+  }
+
+  function applyDragPosition(state) {
+    root.style.left = `${state.nextLeft}px`;
+    root.style.top = `${state.nextTop}px`;
+    root.style.right = 'auto';
+    root.style.bottom = 'auto';
+
+    if (!panel.hidden) positionPanel();
   }
 
   function positionPanel() {

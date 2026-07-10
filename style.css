@@ -47,26 +47,12 @@ body.light-mode {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  scrollbar-color: var(--accent-dim) var(--surface-mid);
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 
-html::-webkit-scrollbar {
-  width: 0.7rem;
-}
-
-html::-webkit-scrollbar-track {
-  background: var(--surface-mid);
-}
-
-html::-webkit-scrollbar-thumb {
-  background: var(--accent-dim);
-  border: 2px solid var(--surface-mid);
-  border-radius: 999px;
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* --- Scroll Progress Bar --- */
@@ -94,6 +80,7 @@ body {
   color: var(--ink);
   line-height: 1.7;
   overflow-x: hidden;
+  scrollbar-width: none;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 

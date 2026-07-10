@@ -13,8 +13,22 @@
 
   const portfolioContext = collectPortfolioContext();
   const chat = GeminiApi.createGeminiChat({ portfolioContext });
+  const dragThreshold = 6;
+  const viewportMargin = 8;
+  let dragState = null;
+  let ignoreClicksUntil = 0;
 
-  launcher.addEventListener('click', togglePanel);
+  launcher.addEventListener('click', event => {
+    if (performance.now() < ignoreClicksUntil) {
+      event.preventDefault();
+      return;
+    }
+    togglePanel();
+  });
+  launcher.addEventListener('pointerdown', startDrag);
+  launcher.addEventListener('pointermove', moveLauncher);
+  launcher.addEventListener('pointerup', finishDrag);
+  launcher.addEventListener('pointercancel', finishDrag);
   closePanelBtn.addEventListener('click', closePanel);
   chatForm.addEventListener('submit', event => {
     event.preventDefault();
@@ -22,6 +36,7 @@
   });
 
   clearBtn.addEventListener('click', clearChat);
+  window.addEventListener('resize', handleViewportResize);
 
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
@@ -40,6 +55,7 @@
     root.classList.add('chadbot-open');
     launcher.setAttribute('aria-expanded', 'true');
     panel.removeAttribute('hidden');
+    positionPanel();
     chatInput.focus();
   }
 
@@ -48,6 +64,102 @@
     launcher.setAttribute('aria-expanded', 'false');
     panel.setAttribute('hidden', '');
     launcher.focus();
+  }
+
+  function startDrag(event) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+    const rect = root.getBoundingClientRect();
+    dragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startLeft: rect.left,
+      startTop: rect.top,
+      moved: false
+    };
+
+    launcher.setPointerCapture(event.pointerId);
+    root.classList.add('chadbot-dragging');
+  }
+
+  function moveLauncher(event) {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+
+    if (!dragState.moved && Math.hypot(deltaX, deltaY) < dragThreshold) return;
+
+    dragState.moved = true;
+    event.preventDefault();
+
+    const maxLeft = Math.max(viewportMargin, window.innerWidth - root.offsetWidth - viewportMargin);
+    const maxTop = Math.max(viewportMargin, window.innerHeight - root.offsetHeight - viewportMargin);
+    const left = clamp(dragState.startLeft + deltaX, viewportMargin, maxLeft);
+    const top = clamp(dragState.startTop + deltaY, viewportMargin, maxTop);
+
+    root.style.left = `${left}px`;
+    root.style.top = `${top}px`;
+    root.style.right = 'auto';
+    root.style.bottom = 'auto';
+
+    if (!panel.hidden) positionPanel();
+  }
+
+  function finishDrag(event) {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+
+    const wasMoved = dragState.moved;
+    dragState = null;
+    root.classList.remove('chadbot-dragging');
+
+    if (launcher.hasPointerCapture(event.pointerId)) {
+      launcher.releasePointerCapture(event.pointerId);
+    }
+
+    if (wasMoved) {
+      ignoreClicksUntil = performance.now() + 500;
+    }
+  }
+
+  function positionPanel() {
+    const launcherRect = launcher.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const gap = 12;
+    const spaceAbove = launcherRect.top - viewportMargin;
+    const spaceBelow = window.innerHeight - launcherRect.bottom - viewportMargin;
+    const openAbove = spaceAbove >= panelRect.height + gap || spaceAbove > spaceBelow;
+    const preferredTop = openAbove
+      ? launcherRect.top - panelRect.height - gap
+      : launcherRect.bottom + gap;
+    const preferredLeft = launcherRect.left + launcherRect.width / 2 > window.innerWidth / 2
+      ? launcherRect.right - panelRect.width
+      : launcherRect.left;
+    const maxLeft = Math.max(viewportMargin, window.innerWidth - panelRect.width - viewportMargin);
+    const maxTop = Math.max(viewportMargin, window.innerHeight - panelRect.height - viewportMargin);
+
+    panel.style.left = `${clamp(preferredLeft, viewportMargin, maxLeft)}px`;
+    panel.style.top = `${clamp(preferredTop, viewportMargin, maxTop)}px`;
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+  }
+
+  function handleViewportResize() {
+    const rect = root.getBoundingClientRect();
+
+    if (root.style.left) {
+      const maxLeft = Math.max(viewportMargin, window.innerWidth - root.offsetWidth - viewportMargin);
+      const maxTop = Math.max(viewportMargin, window.innerHeight - root.offsetHeight - viewportMargin);
+      root.style.left = `${clamp(rect.left, viewportMargin, maxLeft)}px`;
+      root.style.top = `${clamp(rect.top, viewportMargin, maxTop)}px`;
+    }
+
+    if (!panel.hidden) positionPanel();
+  }
+
+  function clamp(value, minimum, maximum) {
+    return Math.min(Math.max(value, minimum), maximum);
   }
 
   function appendMessage(role, text) {

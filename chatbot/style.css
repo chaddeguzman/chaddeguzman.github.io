@@ -7,6 +7,8 @@
   position: fixed;
   right: 2rem;
   bottom: 1.25rem;
+  width: 3.75rem;
+  height: 3.75rem;
   z-index: 180;
   font-family: var(--font-body);
   color: var(--ink);
@@ -20,10 +22,21 @@
   background: var(--accent);
   color: var(--surface);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28), 0 0 24px var(--accent-glow);
-  cursor: pointer;
+  cursor: grab;
   display: grid;
   place-items: center;
+  touch-action: none;
+  user-select: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.chadbot-dragging .chadbot-launcher {
+  cursor: grabbing;
+  transition: none;
+}
+
+.chadbot-dragging .chadbot-launcher:hover {
+  transform: none;
 }
 
 .chadbot-launcher:hover {
@@ -52,12 +65,12 @@
 }
 
 .chadbot-panel {
-  position: absolute;
-  right: 0;
-  bottom: 4.75rem;
+  position: fixed;
+  right: 2rem;
+  bottom: 6rem;
   width: min(390px, calc(100vw - 2.5rem));
   height: min(620px, calc(100vh - 7rem));
-  min-height: 430px;
+  min-height: min(430px, calc(100vh - 1rem));
   border: 1px solid var(--border-mid);
   border-radius: 8px;
   background: var(--surface-alt);
@@ -100,6 +113,13 @@
   font-size: 1.05rem;
   font-weight: 500;
   line-height: 1.2;
+}
+
+.chadbot-drag-hint {
+  margin: 0.3rem 0 0;
+  color: var(--ink-faint);
+  font-size: 0.68rem;
+  line-height: 1.35;
 }
 
 .chadbot-header-actions {
@@ -264,13 +284,9 @@
   }
 
   .chadbot-panel {
-    position: fixed;
-    right: 0.75rem;
-    left: 0.75rem;
-    bottom: 5.25rem;
-    width: auto;
+    width: calc(100vw - 1.5rem);
     height: min(650px, calc(100vh - 6.5rem));
-    min-height: 360px;
+    min-height: min(360px, calc(100vh - 1rem));
   }
 
   .chadbot-header {

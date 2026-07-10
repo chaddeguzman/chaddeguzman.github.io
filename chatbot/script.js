@@ -493,6 +493,7 @@
       ['Professional Timeline', ['#experience']],
       ['Featured Projects', ['#projects']],
       ['Just for Fun Projects', ['#j4f']],
+      ['Github Repositories', ['#github']],
       ['Contact', ['#contact']]
     ];
 

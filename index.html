@@ -4,10 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chad De Guzman</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23314e31'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Georgia%2C serif' font-size='11' font-weight='700' letter-spacing='-0.5' fill='%23a8d4a8'%3ECDG%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="features.css">
   <link rel="stylesheet" href="chatbot/style.css">
@@ -36,6 +43,7 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#j4f">J4F</a></li>
+      <li><a href="#github">Github</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <p class="nav-footnote">
@@ -75,7 +83,9 @@
         
         <div class="about-image-placeholder">
           <!-- <span>Your Photo</span> -->
-          <span><img src="assets/me.png" alt="Chad De Guzman" style="width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;display:block;"></span>
+          <span>
+            <img class="about-photo" src="assets/me.png" alt="Chad De Guzman">
+          </span>
         </div>
         
         <div class="about-image-accent"></div>
@@ -388,12 +398,47 @@
     </div>
   </section>
 
-  <!-- Divider: J4F → Contact -->
+  <!-- Divider: J4F → Github -->
+  <div class="section-divider" aria-hidden="true"></div>
+
+  <!-- Github Section -->
+  <section class="github-section section" id="github">
+    <div class="section-label">06 — Github</div>
+    <h2>Repositories</h2>
+    <p class="github-intro">
+      Public repositories outside the main portfolio,
+      <a href="https://github.com/chaddeguzman/chaddeguzman.github.io" target="_blank" rel="noopener">chaddeguzman.github.io</a>.
+    </p>
+    <div class="github-repo-list">
+      <a class="github-repo-card" href="https://github.com/chaddeguzman/basic-chat-bot" target="_blank" rel="noopener">
+        <span class="github-repo-meta">JavaScript</span>
+        <span class="github-repo-name">basic-chat-bot</span>
+        <span class="github-repo-desc">Basic Gemini chatbot static web app.</span>
+      </a>
+      <a class="github-repo-card" href="https://github.com/chaddeguzman/control-library" target="_blank" rel="noopener">
+        <span class="github-repo-meta">PowerShell</span>
+        <span class="github-repo-name">control-library</span>
+        <span class="github-repo-desc">Control Library.</span>
+      </a>
+      <a class="github-repo-card" href="https://github.com/chaddeguzman/j4fprojects" target="_blank" rel="noopener">
+        <span class="github-repo-meta">CSS</span>
+        <span class="github-repo-name">j4fprojects</span>
+        <span class="github-repo-desc">Just 4 Fun Projects.</span>
+      </a>
+      <a class="github-repo-card" href="https://github.com/chaddeguzman/task-master" target="_blank" rel="noopener">
+        <span class="github-repo-meta">JavaScript</span>
+        <span class="github-repo-name">task-master</span>
+        <span class="github-repo-desc">Local-first Task Master kanban tracker.</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Divider: Github → Contact -->
   <div class="section-divider" aria-hidden="true"></div>
 
   <!-- Contact Section -->
   <section class="contact-section section surface-alt" id="contact">
-    <div class="section-label">06 — Contact</div>
+    <div class="section-label">07 — Contact</div>
     <div class="contact-inner">
       <h2>Interested?</h2>
       <p>Have a project in mind or just want to say hello? Email me at</p>

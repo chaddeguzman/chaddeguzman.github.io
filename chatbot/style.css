@@ -39,6 +39,10 @@
   will-change: left, top;
 }
 
+.chadbot-dragging .chadbot-panel {
+  cursor: grabbing;
+}
+
 .chadbot-dragging .chadbot-launcher:hover {
   transform: none;
 }
@@ -82,6 +86,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  cursor: grab;
+  touch-action: none;
 }
 
 .chadbot-panel::before {
@@ -196,6 +202,7 @@
   flex-direction: column;
   gap: 0.7rem;
   scrollbar-width: none;
+  touch-action: pan-y;
 }
 
 .chadbot-chat-box::-webkit-scrollbar {
@@ -252,6 +259,8 @@
   font-family: var(--font-body);
   font-size: 0.88rem;
   padding: 0.72rem 0.85rem;
+  cursor: text;
+  touch-action: auto;
 }
 
 .chadbot-input::placeholder {

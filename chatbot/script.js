@@ -26,10 +26,17 @@
     }
     togglePanel();
   });
-  launcher.addEventListener('pointerdown', startDrag);
-  launcher.addEventListener('pointermove', moveLauncher);
+  launcher.addEventListener('pointerdown', event => startDrag(event, 'launcher'));
+  launcher.addEventListener('pointermove', moveDrag);
   launcher.addEventListener('pointerup', finishDrag);
   launcher.addEventListener('pointercancel', finishDrag);
+  panel.addEventListener('pointerdown', event => {
+    if (event.target.closest('input, textarea, select, button, a, [contenteditable="true"]')) return;
+    startDrag(event, 'panel');
+  });
+  panel.addEventListener('pointermove', moveDrag);
+  panel.addEventListener('pointerup', finishDrag);
+  panel.addEventListener('pointercancel', finishDrag);
   closePanelBtn.addEventListener('click', closePanel);
   chatForm.addEventListener('submit', event => {
     event.preventDefault();
@@ -67,40 +74,57 @@
     launcher.focus();
   }
 
-  function startDrag(event) {
+  function startDrag(event, source) {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
 
-    const rect = root.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
+    const panelRect = source === 'panel' ? panel.getBoundingClientRect() : null;
+    const dragRects = panelRect ? [rootRect, panelRect] : [rootRect];
     dragState = {
+      source,
+      captureTarget: event.currentTarget,
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      startLeft: rect.left,
-      startTop: rect.top,
-      nextLeft: rect.left,
-      nextTop: rect.top,
-      maxLeft: Math.max(viewportMargin, window.innerWidth - rect.width - viewportMargin),
-      maxTop: Math.max(viewportMargin, window.innerHeight - rect.height - viewportMargin),
+      startLeft: rootRect.left,
+      startTop: rootRect.top,
+      nextLeft: rootRect.left,
+      nextTop: rootRect.top,
+      startPanelLeft: panelRect?.left,
+      startPanelTop: panelRect?.top,
+      nextPanelLeft: panelRect?.left,
+      nextPanelTop: panelRect?.top,
+      minDeltaX: Math.max(...dragRects.map(rect => viewportMargin - rect.left)),
+      maxDeltaX: Math.min(...dragRects.map(rect => window.innerWidth - viewportMargin - rect.right)),
+      minDeltaY: Math.max(...dragRects.map(rect => viewportMargin - rect.top)),
+      maxDeltaY: Math.min(...dragRects.map(rect => window.innerHeight - viewportMargin - rect.bottom)),
       moved: false
     };
 
-    launcher.setPointerCapture(event.pointerId);
+    dragState.captureTarget.setPointerCapture(event.pointerId);
     root.classList.add('chadbot-dragging');
   }
 
-  function moveLauncher(event) {
+  function moveDrag(event) {
     if (!dragState || event.pointerId !== dragState.pointerId) return;
 
-    const deltaX = event.clientX - dragState.startX;
-    const deltaY = event.clientY - dragState.startY;
+    const rawDeltaX = event.clientX - dragState.startX;
+    const rawDeltaY = event.clientY - dragState.startY;
 
-    if (!dragState.moved && Math.hypot(deltaX, deltaY) < dragThreshold) return;
+    if (!dragState.moved && Math.hypot(rawDeltaX, rawDeltaY) < dragThreshold) return;
 
     dragState.moved = true;
     event.preventDefault();
 
-    dragState.nextLeft = clamp(dragState.startLeft + deltaX, viewportMargin, dragState.maxLeft);
-    dragState.nextTop = clamp(dragState.startTop + deltaY, viewportMargin, dragState.maxTop);
+    const deltaX = clamp(rawDeltaX, dragState.minDeltaX, dragState.maxDeltaX);
+    const deltaY = clamp(rawDeltaY, dragState.minDeltaY, dragState.maxDeltaY);
+    dragState.nextLeft = dragState.startLeft + deltaX;
+    dragState.nextTop = dragState.startTop + deltaY;
+
+    if (dragState.source === 'panel') {
+      dragState.nextPanelLeft = dragState.startPanelLeft + deltaX;
+      dragState.nextPanelTop = dragState.startPanelTop + deltaY;
+    }
 
     if (!dragFrameId) {
       dragFrameId = window.requestAnimationFrame(renderDragFrame);
@@ -111,6 +135,7 @@
     if (!dragState || event.pointerId !== dragState.pointerId) return;
 
     const wasMoved = dragState.moved;
+    const captureTarget = dragState.captureTarget;
 
     if (dragFrameId) {
       window.cancelAnimationFrame(dragFrameId);
@@ -122,8 +147,8 @@
     dragState = null;
     root.classList.remove('chadbot-dragging');
 
-    if (launcher.hasPointerCapture(event.pointerId)) {
-      launcher.releasePointerCapture(event.pointerId);
+    if (captureTarget.hasPointerCapture(event.pointerId)) {
+      captureTarget.releasePointerCapture(event.pointerId);
     }
 
     if (wasMoved) {
@@ -143,7 +168,14 @@
     root.style.right = 'auto';
     root.style.bottom = 'auto';
 
-    if (!panel.hidden) positionPanel();
+    if (state.source === 'panel') {
+      panel.style.left = `${state.nextPanelLeft}px`;
+      panel.style.top = `${state.nextPanelTop}px`;
+      panel.style.right = 'auto';
+      panel.style.bottom = 'auto';
+    } else if (!panel.hidden) {
+      positionPanel();
+    }
   }
 
   function positionPanel() {

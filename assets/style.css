@@ -1136,7 +1136,7 @@ body.light-mode .hero::after {
   margin-left: 2.3rem;
   margin-bottom: 0.35rem;
   color: var(--ink-faint);
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   line-height: 1;
 }
 
@@ -1153,7 +1153,7 @@ body.light-mode .hero::after {
   gap: var(--heatmap-cell-gap);
   width: 1.75rem;
   color: var(--ink-faint);
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   line-height: var(--heatmap-cell-size);
 }
 

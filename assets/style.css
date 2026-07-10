@@ -1178,7 +1178,7 @@ body.light-mode .hero::after {
 }
 
 .github-heatmap-cell[data-level="1"] {
-  background: rgba(106, 190, 106, 0.5);
+  background: rgba(126, 210, 126, 0.62);
 }
 
 .github-heatmap-cell[data-level="2"] {
@@ -1204,7 +1204,7 @@ body.light-mode .github-heatmap-cell[data-level="0"] {
 }
 
 body.light-mode .github-heatmap-cell[data-level="1"] {
-  background: #c6edbf;
+  background: #b5eaaa;
 }
 
 body.light-mode .github-heatmap-cell[data-level="2"] {

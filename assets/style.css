@@ -324,6 +324,34 @@ body.light-mode .theme-toggle-icon--light {
   opacity: 0.78;
 }
 
+.nav-visitor-count {
+  margin-top: auto;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(168, 212, 168, 0.2);
+  color: var(--nav-text);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  opacity: 0.86;
+}
+
+.nav-visitor-label {
+  display: block;
+  color: var(--nav-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.72;
+}
+
+.nav-visitor-value {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--nav-email);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  text-shadow: 0 0 8px rgba(168, 212, 168, 0.28);
+}
+
 .nav-footnote a {
   display: inline-block;
   color: var(--nav-email);
@@ -1445,6 +1473,7 @@ body.light-mode .section-divider {
     display: flex;
   }
 
+  .nav-visitor-count,
   .nav-footnote {
     display: none;
   }

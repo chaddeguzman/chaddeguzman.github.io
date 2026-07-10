@@ -120,6 +120,60 @@ sections.forEach(section => sectionObserver.observe(section));
 
 
 // ---------------------------------------------------------------------------
+// Monthly Visitor Count
+// ---------------------------------------------------------------------------
+const visitorCount = document.getElementById('visitorCount');
+const visitorCountValue = document.getElementById('visitorCountValue');
+
+if (visitorCount && visitorCountValue) {
+  updateVisitorCount();
+}
+
+async function updateVisitorCount() {
+  const endpoint = visitorCount.dataset.visitorEndpoint?.trim();
+
+  if (!endpoint) {
+    visitorCountValue.textContent = 'Private';
+    visitorCount.title = [
+      'Unique monthly visitor counting needs a privacy-safe backend endpoint.',
+      'No IP or location data is collected by this static page.'
+    ].join(' ');
+    return;
+  }
+
+  visitorCountValue.textContent = '...';
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        month: getVisitorMonthKey(),
+        path: window.location.pathname,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      })
+    });
+
+    if (!response.ok) throw new Error('Visitor endpoint failed');
+
+    const data = await response.json();
+    const count = Number(data?.count);
+    visitorCountValue.textContent = Number.isFinite(count) ? count.toLocaleString() : '--';
+  } catch (error) {
+    visitorCountValue.textContent = '--';
+    visitorCount.title = 'Monthly visitor count is temporarily unavailable.';
+  }
+}
+
+function getVisitorMonthKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+
+// ---------------------------------------------------------------------------
 // Project Hover Hooks
 // ---------------------------------------------------------------------------
 // Kept as no-op hooks so the UI can add hover behavior later without

@@ -127,9 +127,11 @@ const portfolioStats = document.getElementById('portfolioStats');
 if (portfolioStats) {
   updatePortfolioStats();
   updateGithubStats();
+  updateGithubContributionStat();
 }
 
 const githubContributionPanel = document.getElementById('githubContributionPanel');
+let githubContributionsDataPromise = null;
 
 if (githubContributionPanel) {
   renderGithubContributions();
@@ -204,16 +206,24 @@ function setStatText(elementId, value) {
   element.textContent = Number.isFinite(value) ? value.toLocaleString() : '--';
 }
 
+async function updateGithubContributionStat() {
+  try {
+    const data = await getGithubContributionsData();
+    setStatText('githubContributionCount', Number(data.totalContributions) || 0);
+  } catch (error) {
+    setStatText('githubContributionCount', '--');
+  }
+}
+
 async function renderGithubContributions() {
   const summary = document.getElementById('githubContributionSummary');
   const monthRow = document.getElementById('githubHeatmapMonths');
   const grid = document.getElementById('githubHeatmapGrid');
-  const source = githubContributionPanel.dataset.contributionsSrc;
 
-  if (!summary || !monthRow || !grid || !source) return;
+  if (!summary || !monthRow || !grid) return;
 
   try {
-    const data = await fetchGithubJson(source);
+    const data = await getGithubContributionsData();
     let weeks = Array.isArray(data.weeks) ? data.weeks : [];
     const total = Number(data.totalContributions) || 0;
     setStatText('githubContributionCount', total);
@@ -239,6 +249,17 @@ async function renderGithubContributions() {
     summary.textContent = 'Contribution activity is temporarily unavailable.';
     grid.setAttribute('aria-label', 'GitHub contribution activity is temporarily unavailable.');
   }
+}
+
+function getGithubContributionsData() {
+  const source = githubContributionPanel?.dataset.contributionsSrc
+    || 'assets/data/github-contributions.json';
+
+  if (!githubContributionsDataPromise) {
+    githubContributionsDataPromise = fetchGithubJson(source);
+  }
+
+  return githubContributionsDataPromise;
 }
 
 function renderContributionMonths(monthRow, weeks) {

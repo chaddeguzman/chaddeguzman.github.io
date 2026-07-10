@@ -324,7 +324,7 @@ body.light-mode .theme-toggle-icon--light {
   opacity: 0.78;
 }
 
-.nav-visitor-count {
+.nav-stats {
   margin-top: auto;
   margin-bottom: 1rem;
   padding-top: 1rem;
@@ -335,7 +335,11 @@ body.light-mode .theme-toggle-icon--light {
   opacity: 0.86;
 }
 
-.nav-visitor-label {
+.nav-stats-group + .nav-stats-group {
+  margin-top: 0.8rem;
+}
+
+.nav-stats-heading {
   display: block;
   color: var(--nav-text);
   text-transform: uppercase;
@@ -343,12 +347,24 @@ body.light-mode .theme-toggle-icon--light {
   opacity: 0.72;
 }
 
-.nav-visitor-value {
-  display: inline-block;
-  margin-top: 0.25rem;
+.nav-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.28rem;
+}
+
+.nav-stat-row span {
+  color: var(--nav-text);
+  opacity: 0.72;
+}
+
+.nav-stat-row strong {
   color: var(--nav-email);
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-shadow: 0 0 8px rgba(168, 212, 168, 0.28);
 }
 
@@ -1473,7 +1489,7 @@ body.light-mode .section-divider {
     display: flex;
   }
 
-  .nav-visitor-count,
+  .nav-stats,
   .nav-footnote {
     display: none;
   }

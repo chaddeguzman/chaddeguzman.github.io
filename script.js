@@ -120,56 +120,84 @@ sections.forEach(section => sectionObserver.observe(section));
 
 
 // ---------------------------------------------------------------------------
-// Monthly Visitor Count
+// Portfolio and GitHub Stats
 // ---------------------------------------------------------------------------
-const visitorCount = document.getElementById('visitorCount');
-const visitorCountValue = document.getElementById('visitorCountValue');
+const portfolioStats = document.getElementById('portfolioStats');
 
-if (visitorCount && visitorCountValue) {
-  updateVisitorCount();
+if (portfolioStats) {
+  updatePortfolioStats();
+  updateGithubStats();
 }
 
-async function updateVisitorCount() {
-  const endpoint = visitorCount.dataset.visitorEndpoint?.trim();
+function updatePortfolioStats() {
+  setStatText('portfolioProjectCount', getPortfolioProjectCount());
+  setStatText('portfolioYearsCount', `${getPortfolioYearsCount()}+`);
+}
 
-  if (!endpoint) {
-    visitorCountValue.textContent = 'Private';
-    visitorCount.title = [
-      'Unique monthly visitor counting needs a privacy-safe backend endpoint.',
-      'No IP or location data is collected by this static page.'
-    ].join(' ');
+function getPortfolioProjectCount() {
+  const statProjectCount = Number(document.querySelector('.stat-num[data-target]')?.dataset.target);
+  if (Number.isFinite(statProjectCount) && statProjectCount > 0) return statProjectCount;
+
+  const visibleProjectCount = document.querySelectorAll(
+    '.project-item, .j4f-preview-card:not(.j4f-preview-card--faint), .github-repo-card'
+  ).length;
+
+  return visibleProjectCount || 0;
+}
+
+function getPortfolioYearsCount() {
+  const yearStats = Array.from(document.querySelectorAll('.stat-num[data-target]'))
+    .map(stat => Number(stat.dataset.target))
+    .filter(Number.isFinite);
+
+  return yearStats[1] || yearStats[0] || 0;
+}
+
+async function updateGithubStats() {
+  const username = portfolioStats.dataset.githubUser;
+  if (!username) return;
+
+  try {
+    const [profile, repos] = await Promise.all([
+      fetchGithubJson(`https://api.github.com/users/${username}`),
+      fetchGithubJson(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`)
+    ]);
+
+    const publicRepoCount = Number(profile.public_repos);
+    const followerCount = Number(profile.followers);
+    const starCount = Array.isArray(repos)
+      ? repos.reduce((total, repo) => total + (Number(repo.stargazers_count) || 0), 0)
+      : 0;
+
+    setStatText('githubRepoCount', publicRepoCount);
+    setStatText('githubStarCount', starCount);
+    setStatText('githubFollowerCount', followerCount);
+  } catch (error) {
+    portfolioStats.title = 'GitHub stats are temporarily unavailable.';
+  }
+}
+
+async function fetchGithubJson(url) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json'
+    }
+  });
+
+  if (!response.ok) throw new Error('GitHub request failed');
+  return response.json();
+}
+
+function setStatText(elementId, value) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+
+  if (typeof value === 'string') {
+    element.textContent = value;
     return;
   }
 
-  visitorCountValue.textContent = '...';
-
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        month: getVisitorMonthKey(),
-        path: window.location.pathname,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      })
-    });
-
-    if (!response.ok) throw new Error('Visitor endpoint failed');
-
-    const data = await response.json();
-    const count = Number(data?.count);
-    visitorCountValue.textContent = Number.isFinite(count) ? count.toLocaleString() : '--';
-  } catch (error) {
-    visitorCountValue.textContent = '--';
-    visitorCount.title = 'Monthly visitor count is temporarily unavailable.';
-  }
-}
-
-function getVisitorMonthKey() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  element.textContent = Number.isFinite(value) ? value.toLocaleString() : '--';
 }
 
 

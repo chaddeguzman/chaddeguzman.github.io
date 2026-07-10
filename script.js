@@ -214,10 +214,13 @@ async function renderGithubContributions() {
 
   try {
     const data = await fetchGithubJson(source);
-    const weeks = Array.isArray(data.weeks) ? data.weeks : [];
+    let weeks = Array.isArray(data.weeks) ? data.weeks : [];
 
     if (!weeks.length) {
-      summary.textContent = 'No contribution data available yet.';
+      weeks = buildEmptyContributionYear(new Date().getFullYear());
+      renderContributionMonths(monthRow, weeks);
+      renderContributionCells(grid, weeks);
+      summary.textContent = `No contribution data available yet for ${new Date().getFullYear()}.`;
       grid.setAttribute('aria-label', 'No GitHub contribution data available yet.');
       return;
     }
@@ -302,6 +305,48 @@ function normalizeContributionWeek(days = []) {
   });
 
   return normalizedDays;
+}
+
+function buildEmptyContributionYear(year) {
+  const weeks = [];
+  const firstDay = new Date(year, 0, 1);
+  const lastDay = new Date(year, 11, 31);
+  const cursor = new Date(firstDay);
+
+  cursor.setDate(cursor.getDate() - cursor.getDay());
+
+  while (cursor <= lastDay || cursor.getDay() !== 0) {
+    const weekStart = toContributionDate(cursor);
+    const contributionDays = [];
+
+    for (let weekday = 0; weekday < 7; weekday += 1) {
+      const date = new Date(cursor);
+      const isInYear = date.getFullYear() === year;
+
+      contributionDays.push({
+        date: isInYear ? toContributionDate(date) : '',
+        weekday,
+        count: 0,
+        level: 0
+      });
+
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    weeks.push({
+      firstDay: weekStart,
+      contributionDays
+    });
+  }
+
+  return weeks;
+}
+
+function toContributionDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function clampContributionLevel(level) {

@@ -32,10 +32,14 @@ jobs:
           output_path = Path("assets/data/github-contributions.json")
           output_path.parent.mkdir(parents=True, exist_ok=True)
 
+          now = datetime.now(timezone.utc)
+          year_start = datetime(now.year, 1, 1, tzinfo=timezone.utc)
+          year_end = datetime(now.year, 12, 31, 23, 59, 59, tzinfo=timezone.utc)
+
           query = """
-          query($login: String!) {
+          query($login: String!, $from: DateTime!, $to: DateTime!) {
             user(login: $login) {
-              contributionsCollection {
+              contributionsCollection(from: $from, to: $to) {
                 contributionCalendar {
                   totalContributions
                   weeks {
@@ -55,7 +59,11 @@ jobs:
 
           request_body = json.dumps({
             "query": query,
-            "variables": {"login": username}
+            "variables": {
+              "login": username,
+              "from": year_start.isoformat(),
+              "to": year_end.isoformat()
+            }
           }).encode("utf-8")
 
           request = urllib.request.Request(
@@ -108,7 +116,8 @@ jobs:
           ]
           data = {
             "username": username,
-            "generatedAt": datetime.now(timezone.utc).isoformat(),
+            "generatedAt": now.isoformat(),
+            "year": now.year,
             "from": all_days[0]["date"] if all_days else "",
             "to": all_days[-1]["date"] if all_days else "",
             "totalContributions": calendar["totalContributions"],

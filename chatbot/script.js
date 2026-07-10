@@ -16,10 +16,19 @@
   const dragThreshold = 6;
   const viewportMargin = 8;
   const botReplyDelayMs = 2000;
+  const promptLimit = 10;
+  const promptCooldownMs = 3 * 60 * 1000;
+  const promptGateStorageKey = 'chadbot-prompt-gate';
+  const replyChunkMinWords = 8;
+  const replyChunkMaxWords = 28;
   let dragState = null;
   let dragFrameId = 0;
   let ignoreClicksUntil = 0;
   let hasShownUsageNotice = false;
+  let promptGateFallback = {
+    count: 0,
+    cooldownUntil: 0
+  };
 
   launcher.addEventListener('click', event => {
     if (performance.now() < ignoreClicksUntil) {
@@ -68,7 +77,7 @@
     positionPanel();
 
     if (!hasShownUsageNotice) {
-      appendMessage('bot', 'Quick note: you can ask up to 5 questions for now. After that, please wait 3 minutes to refresh the token limit and keep answers accurate.');
+      appendMessage('bot', 'Quick note: you can ask up to 10 questions for now. After that, please wait 3 minutes to refresh the token limit and keep answers accurate.');
       hasShownUsageNotice = true;
     }
 
@@ -252,14 +261,57 @@
   }
 
   function splitReplyIntoChunks(reply) {
-    const sentences = String(reply || '')
+    const text = String(reply || '')
       .replace(/\s+/g, ' ')
-      .trim()
-      .match(/[^.!?]+(?:[.!?]+|$)/g);
+      .trim();
 
-    return (sentences || [reply])
+    if (!text) return [];
+
+    const urls = [];
+    const protectedText = text.replace(/https?:\/\/[^\s<>"')]+/g, url => {
+      const token = `__CHADBOT_URL_${urls.length}__`;
+      urls.push(url);
+      return token;
+    });
+
+    const sentences = protectedText.match(/[^.!?]+(?:[.!?]+|$)/g) || [protectedText];
+    const chunks = [];
+    let current = '';
+
+    sentences
       .map(sentence => sentence.trim())
-      .filter(Boolean);
+      .filter(Boolean)
+      .forEach(sentence => {
+        const restoredSentence = restoreProtectedUrls(sentence, urls);
+        const candidate = current ? `${current} ${restoredSentence}` : restoredSentence;
+        const currentWords = countWords(current);
+        const candidateWords = countWords(candidate);
+
+        if (!current || candidateWords <= replyChunkMaxWords || currentWords < replyChunkMinWords) {
+          current = candidate;
+          return;
+        }
+
+        chunks.push(current);
+        current = restoredSentence;
+      });
+
+    if (current) chunks.push(current);
+
+    return chunks;
+  }
+
+  function restoreProtectedUrls(text, urls) {
+    return urls.reduce((result, url, index) => (
+      result.replace(new RegExp(`__CHADBOT_URL_${index}__`, 'g'), url)
+    ), text);
+  }
+
+  function countWords(text) {
+    return String(text || '')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length;
   }
 
   async function appendBotReply(reply, firstTypingBubble) {
@@ -290,6 +342,26 @@
   async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
+
+    const gate = getPromptGate();
+    const cooldownRemainingMs = gate.cooldownUntil - Date.now();
+
+    if (cooldownRemainingMs > 0) {
+      appendMessage('bot', `Please wait ${formatCooldown(cooldownRemainingMs)} before asking more questions. This keeps ChadBot's answers focused and accurate.`);
+      return;
+    }
+
+    const updatedGate = {
+      count: gate.count + 1,
+      cooldownUntil: gate.cooldownUntil
+    };
+
+    if (updatedGate.count >= promptLimit) {
+      updatedGate.count = 0;
+      updatedGate.cooldownUntil = Date.now() + promptCooldownMs;
+    }
+
+    savePromptGate(updatedGate);
 
     chatInput.value = '';
     appendMessage('user', message);
@@ -322,6 +394,47 @@
     sendBtn.disabled = false;
     chatInput.disabled = false;
     chatInput.focus();
+  }
+
+  function getPromptGate() {
+    try {
+      const gate = JSON.parse(localStorage.getItem(promptGateStorageKey) || '{}');
+      const cooldownUntil = Number(gate.cooldownUntil) || 0;
+
+      if (cooldownUntil > Date.now()) {
+        return {
+          count: Number(gate.count) || 0,
+          cooldownUntil
+        };
+      }
+
+      return {
+        count: Number(gate.count) || 0,
+        cooldownUntil: 0
+      };
+    } catch (error) {
+      return promptGateFallback;
+    }
+  }
+
+  function savePromptGate(gate) {
+    promptGateFallback = gate;
+
+    try {
+      localStorage.setItem(promptGateStorageKey, JSON.stringify(gate));
+    } catch (error) {
+      // localStorage can be unavailable in private or restricted browsing contexts.
+    }
+  }
+
+  function formatCooldown(milliseconds) {
+    const totalSeconds = Math.max(1, Math.ceil(milliseconds / 1000));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (!minutes) return `${seconds} second${seconds === 1 ? '' : 's'}`;
+    if (!seconds) return `${minutes} minute${minutes === 1 ? '' : 's'}`;
+    return `${minutes} minute${minutes === 1 ? '' : 's'} and ${seconds} second${seconds === 1 ? '' : 's'}`;
   }
 
   function clearChat() {

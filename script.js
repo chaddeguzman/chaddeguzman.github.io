@@ -215,6 +215,8 @@ async function renderGithubContributions() {
   try {
     const data = await fetchGithubJson(source);
     let weeks = Array.isArray(data.weeks) ? data.weeks : [];
+    const total = Number(data.totalContributions) || 0;
+    setStatText('githubContributionCount', total);
 
     if (!weeks.length) {
       weeks = buildEmptyContributionYear(new Date().getFullYear());
@@ -228,7 +230,6 @@ async function renderGithubContributions() {
     renderContributionMonths(monthRow, weeks);
     renderContributionCells(grid, weeks);
 
-    const total = Number(data.totalContributions) || 0;
     summary.textContent = [
       `Total of ${total.toLocaleString()} contributions`,
       `from ${formatContributionRange(data.from, data.to)}`

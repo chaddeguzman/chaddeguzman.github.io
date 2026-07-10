@@ -527,6 +527,45 @@
         <span class="github-repo-desc">Local-first Task Master kanban tracker.</span>
       </a>
     </div>
+
+    <div
+      class="github-contributions"
+      id="githubContributionPanel"
+      data-contributions-src="assets/data/github-contributions.json"
+    >
+      <div class="github-contributions-header">
+        <div>
+          <h3>Contributions in the Last Year</h3>
+          <p id="githubContributionSummary">Loading contribution activity...</p>
+        </div>
+      </div>
+
+      <div class="github-heatmap-wrap" id="githubHeatmapWrap" aria-live="polite">
+        <div class="github-heatmap-months" id="githubHeatmapMonths" aria-hidden="true"></div>
+        <div class="github-heatmap-body">
+          <div class="github-heatmap-days" aria-hidden="true">
+            <span></span>
+            <span>Mon</span>
+            <span></span>
+            <span>Wed</span>
+            <span></span>
+            <span>Fri</span>
+            <span></span>
+          </div>
+          <div class="github-heatmap-grid" id="githubHeatmapGrid" role="img"></div>
+        </div>
+      </div>
+
+      <div class="github-heatmap-legend" aria-label="Contribution intensity legend">
+        <span>Less</span>
+        <span class="github-heatmap-cell" data-level="0"></span>
+        <span class="github-heatmap-cell" data-level="1"></span>
+        <span class="github-heatmap-cell" data-level="2"></span>
+        <span class="github-heatmap-cell" data-level="3"></span>
+        <span class="github-heatmap-cell" data-level="4"></span>
+        <span>More</span>
+      </div>
+    </div>
   </section>
 
   <!-- Divider: Github → Contact -->

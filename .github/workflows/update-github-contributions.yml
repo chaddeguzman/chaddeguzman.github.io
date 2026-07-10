@@ -1,0 +1,135 @@
+name: Update GitHub Contributions
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-contributions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch contribution calendar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: chaddeguzman
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          token = os.environ["GITHUB_TOKEN"]
+          username = os.environ["GITHUB_USER"]
+          output_path = Path("assets/data/github-contributions.json")
+          output_path.parent.mkdir(parents=True, exist_ok=True)
+
+          query = """
+          query($login: String!) {
+            user(login: $login) {
+              contributionsCollection {
+                contributionCalendar {
+                  totalContributions
+                  weeks {
+                    firstDay
+                    contributionDays {
+                      date
+                      weekday
+                      contributionCount
+                      contributionLevel
+                    }
+                  }
+                }
+              }
+            }
+          }
+          """
+
+          request_body = json.dumps({
+            "query": query,
+            "variables": {"login": username}
+          }).encode("utf-8")
+
+          request = urllib.request.Request(
+            "https://api.github.com/graphql",
+            data=request_body,
+            headers={
+              "Authorization": f"Bearer {token}",
+              "Content-Type": "application/json",
+              "Accept": "application/vnd.github+json"
+            }
+          )
+
+          with urllib.request.urlopen(request) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+
+          if payload.get("errors"):
+            raise RuntimeError(payload["errors"])
+
+          calendar = (
+            payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+          )
+          level_map = {
+            "NONE": 0,
+            "FIRST_QUARTILE": 1,
+            "SECOND_QUARTILE": 2,
+            "THIRD_QUARTILE": 3,
+            "FOURTH_QUARTILE": 4
+          }
+          weeks = []
+
+          for week in calendar["weeks"]:
+            days = []
+            for day in week["contributionDays"]:
+              days.append({
+                "date": day["date"],
+                "weekday": day["weekday"],
+                "count": day["contributionCount"],
+                "level": level_map.get(day["contributionLevel"], 0)
+              })
+
+            weeks.append({
+              "firstDay": week["firstDay"],
+              "contributionDays": days
+            })
+
+          all_days = [
+            day
+            for week in weeks
+            for day in week["contributionDays"]
+          ]
+          data = {
+            "username": username,
+            "generatedAt": datetime.now(timezone.utc).isoformat(),
+            "from": all_days[0]["date"] if all_days else "",
+            "to": all_days[-1]["date"] if all_days else "",
+            "totalContributions": calendar["totalContributions"],
+            "weeks": weeks
+          }
+
+          output_path.write_text(
+            json.dumps(data, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8"
+          )
+          PY
+
+      - name: Commit contribution data
+        run: |
+          if git diff --quiet -- assets/data/github-contributions.json; then
+            echo "Contribution data is already up to date."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/data/github-contributions.json
+          git commit -m "Update GitHub contribution data"
+          git push

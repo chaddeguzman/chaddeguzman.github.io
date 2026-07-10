@@ -129,6 +129,12 @@ if (portfolioStats) {
   updateGithubStats();
 }
 
+const githubContributionPanel = document.getElementById('githubContributionPanel');
+
+if (githubContributionPanel) {
+  renderGithubContributions();
+}
+
 function updatePortfolioStats() {
   setStatText('portfolioProjectCount', getPortfolioProjectCount());
   setStatText('portfolioYearsCount', getPortfolioYearsCount());
@@ -196,6 +202,122 @@ function setStatText(elementId, value) {
   }
 
   element.textContent = Number.isFinite(value) ? value.toLocaleString() : '--';
+}
+
+async function renderGithubContributions() {
+  const summary = document.getElementById('githubContributionSummary');
+  const monthRow = document.getElementById('githubHeatmapMonths');
+  const grid = document.getElementById('githubHeatmapGrid');
+  const source = githubContributionPanel.dataset.contributionsSrc;
+
+  if (!summary || !monthRow || !grid || !source) return;
+
+  try {
+    const data = await fetchGithubJson(source);
+    const weeks = Array.isArray(data.weeks) ? data.weeks : [];
+
+    if (!weeks.length) {
+      summary.textContent = 'No contribution data available yet.';
+      grid.setAttribute('aria-label', 'No GitHub contribution data available yet.');
+      return;
+    }
+
+    renderContributionMonths(monthRow, weeks);
+    renderContributionCells(grid, weeks);
+
+    const total = Number(data.totalContributions) || 0;
+    const from = formatContributionDate(data.from);
+    const to = formatContributionDate(data.to);
+    summary.textContent = `${total.toLocaleString()} contributions from ${from} to ${to}`;
+    grid.setAttribute('aria-label', `${total.toLocaleString()} GitHub contributions in the last year.`);
+  } catch (error) {
+    summary.textContent = 'Contribution activity is temporarily unavailable.';
+    grid.setAttribute('aria-label', 'GitHub contribution activity is temporarily unavailable.');
+  }
+}
+
+function renderContributionMonths(monthRow, weeks) {
+  monthRow.innerHTML = '';
+  monthRow.style.gridTemplateColumns = `repeat(${weeks.length}, var(--heatmap-cell-size))`;
+
+  let previousMonth = '';
+
+  weeks.forEach((week, index) => {
+    const firstDay = week.contributionDays?.[0]?.date || week.firstDay;
+    const date = firstDay ? new Date(`${firstDay}T00:00:00`) : null;
+    const month = date && date.getDate() <= 7
+      ? date.toLocaleString('en', { month: 'short' })
+      : '';
+    const label = month && month !== previousMonth ? month : '';
+
+    if (label) previousMonth = label;
+
+    const monthLabel = document.createElement('span');
+    monthLabel.textContent = label;
+    monthLabel.style.gridColumn = `${index + 1}`;
+    monthRow.appendChild(monthLabel);
+  });
+}
+
+function renderContributionCells(grid, weeks) {
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = `repeat(${weeks.length}, var(--heatmap-cell-size))`;
+
+  weeks.forEach(week => {
+    const days = normalizeContributionWeek(week.contributionDays);
+
+    days.forEach(day => {
+      const cell = document.createElement('span');
+      const count = Number(day.count) || 0;
+      const level = clampContributionLevel(day.level);
+      const date = day.date || '';
+
+      cell.className = 'github-heatmap-cell';
+      cell.dataset.level = String(level);
+      cell.title = `${count.toLocaleString()} contribution${count === 1 ? '' : 's'} on ${date}`;
+      cell.setAttribute('aria-label', cell.title);
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function normalizeContributionWeek(days = []) {
+  const normalizedDays = Array.from({ length: 7 }, (_, weekday) => ({
+    date: '',
+    weekday,
+    count: 0,
+    level: 0
+  }));
+
+  days.forEach(day => {
+    const weekday = Number(day.weekday);
+    if (!Number.isInteger(weekday) || weekday < 0 || weekday > 6) return;
+
+    normalizedDays[weekday] = {
+      date: day.date,
+      weekday,
+      count: Number(day.count) || 0,
+      level: clampContributionLevel(day.level)
+    };
+  });
+
+  return normalizedDays;
+}
+
+function clampContributionLevel(level) {
+  const numericLevel = Number(level);
+  if (!Number.isFinite(numericLevel)) return 0;
+  return Math.min(Math.max(Math.round(numericLevel), 0), 4);
+}
+
+function formatContributionDate(value) {
+  if (!value) return 'unknown';
+
+  return new Date(`${value}T00:00:00`).toLocaleDateString('en', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
 }
 
 

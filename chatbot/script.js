@@ -15,9 +15,12 @@
   const chat = GeminiApi.createGeminiChat({ portfolioContext });
   const dragThreshold = 6;
   const viewportMargin = 8;
+  const botReplyDelayMs = 2000;
+  const botChunkDelayMs = 420;
   let dragState = null;
   let dragFrameId = 0;
   let ignoreClicksUntil = 0;
+  let hasShownUsageNotice = false;
 
   launcher.addEventListener('click', event => {
     if (performance.now() < ignoreClicksUntil) {
@@ -64,6 +67,12 @@
     launcher.setAttribute('aria-expanded', 'true');
     panel.removeAttribute('hidden');
     positionPanel();
+
+    if (!hasShownUsageNotice) {
+      appendMessage('bot', 'Quick note: you can ask up to 5 questions for now. After that, please wait 3 minutes to refresh the token limit and keep answers accurate.');
+      hasShownUsageNotice = true;
+    }
+
     chatInput.focus();
   }
 
@@ -226,6 +235,49 @@
     return message;
   }
 
+  function appendTypingStatus() {
+    const typing = document.createElement('div');
+    typing.className = 'chadbot-message chadbot-message--bot chadbot-typing-status';
+    typing.setAttribute('aria-live', 'polite');
+    typing.innerHTML = `
+      <span class="chadbot-typing-status__text">ChadBot is typing</span>
+      <span class="chadbot-typing-status__dots" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    `;
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return typing;
+  }
+
+  function splitReplyIntoChunks(reply) {
+    const sentences = String(reply || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .match(/[^.!?]+(?:[.!?]+|$)/g);
+
+    return (sentences || [reply])
+      .map(sentence => sentence.trim())
+      .filter(Boolean);
+  }
+
+  async function appendBotReply(reply) {
+    const chunks = splitReplyIntoChunks(reply);
+
+    for (let index = 0; index < chunks.length; index += 1) {
+      appendMessage('bot', chunks[index]);
+      if (index < chunks.length - 1) {
+        await sleep(botChunkDelayMs);
+      }
+    }
+  }
+
+  function sleep(duration) {
+    return new Promise(resolve => window.setTimeout(resolve, duration));
+  }
+
   async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
@@ -233,14 +285,28 @@
     chatInput.value = '';
     appendMessage('user', message);
 
-    const typing = appendMessage('bot', 'Thinking...');
+    const typing = appendTypingStatus();
     sendBtn.disabled = true;
     chatInput.disabled = true;
+    const startedAt = performance.now();
 
     try {
       const reply = await chat.sendMessage(message);
-      typing.textContent = reply;
+      const elapsed = performance.now() - startedAt;
+
+      if (elapsed < botReplyDelayMs) {
+        await sleep(botReplyDelayMs - elapsed);
+      }
+
+      typing.remove();
+      await appendBotReply(reply);
     } catch (error) {
+      const elapsed = performance.now() - startedAt;
+
+      if (elapsed < botReplyDelayMs) {
+        await sleep(botReplyDelayMs - elapsed);
+      }
+
       typing.className = 'chadbot-message chadbot-message--error';
       typing.textContent = error.message || 'Something went wrong. Please try again.';
     }

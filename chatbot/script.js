@@ -1,4 +1,7 @@
 (function () {
+  // -------------------------------------------------------------------------
+  // DOM References and Chat Setup
+  // -------------------------------------------------------------------------
   const root = document.getElementById('chadbotRoot');
   if (!root || !window.GeminiApi) return;
 
@@ -36,6 +39,9 @@
     cooldownUntil: 0
   };
 
+  // -------------------------------------------------------------------------
+  // Event Listeners
+  // -------------------------------------------------------------------------
   launcher.addEventListener('click', event => {
     if (performance.now() < ignoreClicksUntil) {
       event.preventDefault();
@@ -68,6 +74,9 @@
     if (root.classList.contains('chadbot-open')) closePanel();
   });
 
+  // -------------------------------------------------------------------------
+  // Panel Open / Close
+  // -------------------------------------------------------------------------
   function togglePanel() {
     if (root.classList.contains('chadbot-open')) {
       closePanel();
@@ -97,6 +106,9 @@
     launcher.focus();
   }
 
+  // -------------------------------------------------------------------------
+  // Dragging
+  // -------------------------------------------------------------------------
   function startDrag(event, source) {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
 
@@ -201,6 +213,9 @@
     }
   }
 
+  // -------------------------------------------------------------------------
+  // Positioning Helpers
+  // -------------------------------------------------------------------------
   function positionPanel() {
     const launcherRect = launcher.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
@@ -240,6 +255,9 @@
     return Math.min(Math.max(value, minimum), maximum);
   }
 
+  // -------------------------------------------------------------------------
+  // Message Rendering
+  // -------------------------------------------------------------------------
   function appendMessage(role, text) {
     const message = document.createElement('div');
     message.className = `chadbot-message chadbot-message--${role}`;
@@ -291,6 +309,9 @@
     return typing;
   }
 
+  // -------------------------------------------------------------------------
+  // Reply Chunking and Timing
+  // -------------------------------------------------------------------------
   function splitReplyIntoChunks(reply) {
     const text = String(reply || '')
       .replace(/\s+/g, ' ')
@@ -370,6 +391,9 @@
     return new Promise(resolve => window.setTimeout(resolve, duration));
   }
 
+  // -------------------------------------------------------------------------
+  // Sending and Prompt Limit
+  // -------------------------------------------------------------------------
   async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
@@ -479,6 +503,9 @@
     ].join(' ');
   }
 
+  // -------------------------------------------------------------------------
+  // Chat Utilities and Portfolio Context
+  // -------------------------------------------------------------------------
   function clearChat() {
     chat.history.length = 0;
     chatBox.innerHTML = '';

@@ -1,4 +1,6 @@
-// --- 0. Dark / Light Theme Toggle ---
+// ---------------------------------------------------------------------------
+// Theme
+// ---------------------------------------------------------------------------
 const themeToggle = document.getElementById('themeToggle');
 const rootElement = document.documentElement;
 const body = document.body;
@@ -9,11 +11,15 @@ themeToggle.addEventListener('click', () => {
 });
 
 
-// --- 1. Dynamic Year in Footer ---
+// ---------------------------------------------------------------------------
+// Footer Year
+// ---------------------------------------------------------------------------
 document.getElementById('year').textContent = new Date().getFullYear();
 
 
-// --- 2. Nav: Shrink on Scroll ---
+// ---------------------------------------------------------------------------
+// Navigation Behavior
+// ---------------------------------------------------------------------------
 const nav = document.querySelector('.nav');
 
 window.addEventListener('scroll', () => {
@@ -25,7 +31,6 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 
-// --- 3. Mobile Nav Toggle ---
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelector('.nav-links');
 
@@ -33,7 +38,7 @@ navToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
 
-// Close mobile nav when a link is clicked
+// Close the mobile menu after a section link is selected.
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
@@ -41,12 +46,14 @@ navLinks.querySelectorAll('a').forEach(link => {
 });
 
 
-// --- 4. Scroll-Triggered Reveal (.reveal elements) ---
+// ---------------------------------------------------------------------------
+// Reveal Animations
+// ---------------------------------------------------------------------------
 const revealElements = document.querySelectorAll(
   '.about-grid, .contact-inner, .footer, .project-item, .timeline-item, .section-label, .section h2'
 );
 
-// Add reveal class to these elements
+// Mark elements for the shared reveal animation before observing them.
 revealElements.forEach(el => {
   el.classList.add('reveal');
 });
@@ -55,7 +62,7 @@ const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target); // animate only once
+      revealObserver.unobserve(entry.target);
     }
   });
 }, {
@@ -66,7 +73,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 revealElements.forEach(el => revealObserver.observe(el));
 
 
-// --- 5. Skill Cards: Staggered Reveal ---
+// Skill cards use their data-delay value for a staggered entrance.
 const skillCards = document.querySelectorAll('.skill-card');
 
 const skillObserver = new IntersectionObserver((entries) => {
@@ -86,7 +93,9 @@ const skillObserver = new IntersectionObserver((entries) => {
 skillCards.forEach(card => skillObserver.observe(card));
 
 
-// --- 6. Active Nav Link Highlight on Scroll ---
+// ---------------------------------------------------------------------------
+// Active Section Tracking
+// ---------------------------------------------------------------------------
 const sections = document.querySelectorAll('section[id]');
 const navLinkItems = document.querySelectorAll('.nav-links a');
 
@@ -110,21 +119,26 @@ const sectionObserver = new IntersectionObserver((entries) => {
 sections.forEach(section => sectionObserver.observe(section));
 
 
-// --- 7. Project Items: Hover Lift ---
-// REMOVED padding modification logic to prevent text shifting and overflow
+// ---------------------------------------------------------------------------
+// Project Hover Hooks
+// ---------------------------------------------------------------------------
+// Kept as no-op hooks so the UI can add hover behavior later without
+// reworking the event wiring.
 const projectItems = document.querySelectorAll('.project-item');
 
 projectItems.forEach(item => {
   item.addEventListener('mouseenter', () => {
-    // Left empty to prevent dynamic layout shifting
+    // Intentionally empty to prevent dynamic layout shifting.
   });
   item.addEventListener('mouseleave', () => {
-    // Left empty to prevent dynamic layout shifting
+    // Intentionally empty to prevent dynamic layout shifting.
   });
 });
 
 
-// --- 9. Scroll Progress Bar ---
+// ---------------------------------------------------------------------------
+// Scroll Progress
+// ---------------------------------------------------------------------------
 const scrollProgress = document.getElementById('scrollProgress');
 
 window.addEventListener('scroll', () => {
@@ -135,7 +149,9 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 
-// --- 10. Copy Email Button ---
+// ---------------------------------------------------------------------------
+// Contact Actions
+// ---------------------------------------------------------------------------
 const copyEmailBtn = document.getElementById('copyEmailBtn');
 const copyLabel = document.getElementById('copyLabel');
 

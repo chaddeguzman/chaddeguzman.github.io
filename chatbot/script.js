@@ -7,6 +7,7 @@
 
   const launcher = document.getElementById('chadbotLauncher');
   const panel = document.getElementById('chadbotPanel');
+  const panelHeader = panel.querySelector('.chadbot-header');
   const closePanelBtn = document.getElementById('chadbotClosePanelBtn');
   const chatBox = document.getElementById('chadbotChatBox');
   const chatForm = document.getElementById('chadbotChatForm');
@@ -69,13 +70,13 @@
   launcher.addEventListener('pointermove', moveDrag);
   launcher.addEventListener('pointerup', finishDrag);
   launcher.addEventListener('pointercancel', finishDrag);
-  panel.addEventListener('pointerdown', event => {
+  panelHeader.addEventListener('pointerdown', event => {
     if (event.target.closest('input, textarea, select, button, a, [contenteditable="true"]')) return;
     startDrag(event, 'panel');
   });
-  panel.addEventListener('pointermove', moveDrag);
-  panel.addEventListener('pointerup', finishDrag);
-  panel.addEventListener('pointercancel', finishDrag);
+  panelHeader.addEventListener('pointermove', moveDrag);
+  panelHeader.addEventListener('pointerup', finishDrag);
+  panelHeader.addEventListener('pointercancel', finishDrag);
   closePanelBtn.addEventListener('click', closePanel);
   chatForm.addEventListener('submit', event => {
     event.preventDefault();

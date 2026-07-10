@@ -795,15 +795,41 @@
   }
 
   function cleanVisitorName(name) {
-    const cleanedName = String(name || '')
+    const stopWords = new Set([
+      'a',
+      'an',
+      'and',
+      'asking',
+      'because',
+      'but',
+      'developer',
+      'from',
+      'hello',
+      'hey',
+      'hi',
+      'looking',
+      'please',
+      'thanks',
+      'thank',
+      'working'
+    ]);
+    const nameWords = [];
+    const words = String(name || '')
       .replace(/[.!?]+$/g, '')
-      .replace(/\b(?:and|but|because|from|working|asking|looking)\b.*$/i, '')
       .trim()
-      .split(/\s+/)
-      .slice(0, 4)
-      .join(' ');
+      .split(/\s+/);
 
-    return formatVisitorName(cleanedName);
+    for (const word of words) {
+      const cleanedWord = word.replace(/^[^A-Za-z]+|[^A-Za-z.'-]+$/g, '');
+      if (!cleanedWord) continue;
+      if (stopWords.has(cleanedWord.toLowerCase())) break;
+      if (!/^[A-Za-z][A-Za-z.'-]*$/.test(cleanedWord)) break;
+
+      nameWords.push(cleanedWord);
+      if (nameWords.length >= 4) break;
+    }
+
+    return formatVisitorName(nameWords.join(' '));
   }
 
   function formatVisitorName(name) {
@@ -820,7 +846,9 @@
 
   function isLikelyVisitorName(name) {
     if (!name) return false;
-    if (/^(?:a|an|the|from|working|asking|looking|interested)\b/i.test(name)) return false;
+    if (/^(?:a|an|the|from|working|asking|looking|interested|hello|hi|hey)\b/i.test(name)) {
+      return false;
+    }
     return /^[A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3}$/.test(name);
   }
 

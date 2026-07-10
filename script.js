@@ -131,7 +131,7 @@ if (portfolioStats) {
 
 function updatePortfolioStats() {
   setStatText('portfolioProjectCount', getPortfolioProjectCount());
-  setStatText('portfolioYearsCount', `${getPortfolioYearsCount()}+`);
+  setStatText('portfolioYearsCount', getPortfolioYearsCount());
 }
 
 function getPortfolioProjectCount() {
@@ -164,14 +164,12 @@ async function updateGithubStats() {
     ]);
 
     const publicRepoCount = Number(profile.public_repos);
-    const followerCount = Number(profile.followers);
     const starCount = Array.isArray(repos)
       ? repos.reduce((total, repo) => total + (Number(repo.stargazers_count) || 0), 0)
       : 0;
 
     setStatText('githubRepoCount', publicRepoCount);
     setStatText('githubStarCount', starCount);
-    setStatText('githubFollowerCount', followerCount);
   } catch (error) {
     portfolioStats.title = 'GitHub stats are temporarily unavailable.';
   }

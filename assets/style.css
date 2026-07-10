@@ -336,12 +336,16 @@ body.light-mode .theme-toggle-icon--light {
 }
 
 .nav-stats-group + .nav-stats-group {
-  margin-top: 0.8rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(168, 212, 168, 0.2);
 }
 
 .nav-stats-heading {
   display: block;
   color: var(--nav-text);
+  font-size: 0.813rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.72;
@@ -357,14 +361,17 @@ body.light-mode .theme-toggle-icon--light {
 
 .nav-stat-row span {
   color: var(--nav-text);
+  font-size: 0.718rem;
   opacity: 0.72;
 }
 
 .nav-stat-row strong {
+  min-width: 3.5ch;
+  text-align: right;
   color: var(--nav-email);
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
   text-shadow: 0 0 8px rgba(168, 212, 168, 0.28);
 }
 

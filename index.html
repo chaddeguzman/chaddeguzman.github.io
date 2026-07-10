@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="features.css">
+  <link rel="stylesheet" href="chatbot/style.css">
 </head>
 <body>
 
@@ -415,7 +416,72 @@
     <span>© <span id="year"></span> | Chad De Guzman.</span>
   </footer>
 
+  <!-- Floating ChadBot Chatbox -->
+  <div class="chadbot-root" id="chadbotRoot">
+    <section class="chadbot-panel" id="chadbotPanel" aria-labelledby="chadbotTitle" hidden>
+      <header class="chadbot-header">
+        <div>
+          <p class="chadbot-eyebrow">Gemini Chat</p>
+          <h2 class="chadbot-title" id="chadbotTitle">ChadBot</h2>
+        </div>
+        <div class="chadbot-header-actions">
+          <button class="chadbot-icon-btn" id="chadbotClosePanelBtn" type="button" aria-label="Close chat">x</button>
+        </div>
+      </header>
+
+      <div class="chadbot-tools" aria-label="Chat tools">
+        <button class="chadbot-action-btn" id="chadbotMemoryLogBtn" type="button">Memory</button>
+        <button class="chadbot-action-btn" id="chadbotDownloadChatBtn" type="button">Download</button>
+        <button class="chadbot-action-btn" id="chadbotClearBtn" type="button">Clear</button>
+      </div>
+
+      <div class="chadbot-chat-box" id="chadbotChatBox" aria-live="polite">
+        <div class="chadbot-message chadbot-message--bot">
+          Hi, I'm ChadBot. Ask me about Chad's work, skills, projects, or AI integration experience.
+        </div>
+      </div>
+
+      <form class="chadbot-form" id="chadbotChatForm">
+        <input
+          class="chadbot-input"
+          id="chadbotChatInput"
+          type="text"
+          placeholder="Ask ChadBot..."
+          autocomplete="off"
+        >
+        <button class="chadbot-send-btn" id="chadbotSendBtn" type="submit">Send</button>
+      </form>
+    </section>
+
+    <button
+      class="chadbot-launcher"
+      id="chadbotLauncher"
+      type="button"
+      aria-label="Open ChadBot chat"
+      aria-controls="chadbotPanel"
+      aria-expanded="false"
+    >
+      <span class="chadbot-launcher-icon" aria-hidden="true">C</span>
+    </button>
+  </div>
+
+  <div class="chadbot-memory-modal" id="chadbotMemoryModal" hidden>
+    <div class="chadbot-memory-window" role="dialog" aria-modal="true" aria-labelledby="chadbotMemoryTitle">
+      <header class="chadbot-memory-header">
+        <h2 class="chadbot-memory-title" id="chadbotMemoryTitle">Local Memory Log</h2>
+        <button class="chadbot-icon-btn" id="chadbotCloseMemoryBtn" type="button" aria-label="Close memory log">x</button>
+      </header>
+      <pre class="chadbot-memory-log" id="chadbotMemoryLogOutput"></pre>
+      <footer class="chadbot-memory-actions">
+        <button class="chadbot-action-btn" id="chadbotDownloadMemoryBtn" type="button">Download Log</button>
+        <button class="chadbot-action-btn" id="chadbotClearMemoryBtn" type="button">Clear Memory</button>
+      </footer>
+    </div>
+  </div>
+
   <script src="script.js"></script>
   <script src="features.js"></script>
+  <script src="chatbot/chat_api.js"></script>
+  <script src="chatbot/script.js"></script>
 </body>
 </html>

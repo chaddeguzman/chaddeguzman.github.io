@@ -47,8 +47,7 @@
   line-height: 1;
 }
 
-.chadbot-panel[hidden],
-.chadbot-memory-modal[hidden] {
+.chadbot-panel[hidden] {
   display: none;
 }
 
@@ -142,6 +141,7 @@
 
 .chadbot-tools {
   display: flex;
+  justify-content: flex-end;
   gap: 0.4rem;
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--border);
@@ -175,18 +175,15 @@
   scrollbar-width: thin;
 }
 
-.chadbot-chat-box::-webkit-scrollbar,
-.chadbot-memory-log::-webkit-scrollbar {
+.chadbot-chat-box::-webkit-scrollbar {
   width: 0.65rem;
 }
 
-.chadbot-chat-box::-webkit-scrollbar-track,
-.chadbot-memory-log::-webkit-scrollbar-track {
+.chadbot-chat-box::-webkit-scrollbar-track {
   background: var(--surface-mid);
 }
 
-.chadbot-chat-box::-webkit-scrollbar-thumb,
-.chadbot-memory-log::-webkit-scrollbar-thumb {
+.chadbot-chat-box::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--accent), var(--accent-dim));
   border: 2px solid var(--surface-mid);
   border-radius: 999px;
@@ -269,75 +266,6 @@
   opacity: 0.55;
   cursor: not-allowed;
   transform: none;
-}
-
-.chadbot-memory-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 190;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  background: rgba(13, 17, 13, 0.72);
-  backdrop-filter: blur(4px);
-}
-
-.chadbot-memory-window {
-  width: min(560px, calc(100vw - 2rem));
-  max-height: min(540px, calc(100vh - 2rem));
-  border: 1px solid var(--border-mid);
-  border-radius: 8px;
-  background: var(--surface-alt);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chadbot-memory-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.chadbot-memory-title {
-  margin: 0;
-  color: var(--ink);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.chadbot-memory-log {
-  margin: 0;
-  flex: 1;
-  min-height: 180px;
-  overflow: auto;
-  padding: 1rem;
-  white-space: pre-wrap;
-  color: var(--ink-muted);
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 0.82rem;
-  line-height: 1.5;
-  background: var(--surface-alt);
-  scrollbar-color: var(--accent-dim) var(--surface-mid);
-  scrollbar-width: thin;
-}
-
-.chadbot-memory-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-body.light-mode .chadbot-memory-modal {
-  background: rgba(26, 46, 26, 0.24);
 }
 
 @media (max-width: 640px) {

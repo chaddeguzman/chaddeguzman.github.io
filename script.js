@@ -1,9 +1,11 @@
 // --- 0. Dark / Light Theme Toggle ---
 const themeToggle = document.getElementById('themeToggle');
+const rootElement = document.documentElement;
 const body = document.body;
 
 themeToggle.addEventListener('click', () => {
-  body.classList.toggle('light-mode');
+  const isLightMode = body.classList.toggle('light-mode');
+  rootElement.classList.toggle('light-mode', isLightMode);
 });
 
 

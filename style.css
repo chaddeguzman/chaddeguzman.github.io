@@ -6,12 +6,12 @@
 }
 
 :root {
-  --ink:         #e8ede8;
-  --ink-muted:   #8a9e8a;
-  --ink-faint:   #4a5e4a;
-  --surface:     #0d110d;
-  --surface-alt: #131813;
-  --surface-mid: #1a211a;
+  --ink:         #edf2ed;
+  --ink-muted:   #a6b5a6;
+  --ink-faint:   #708070;
+  --surface:     #191f19;
+  --surface-alt: #222a22;
+  --surface-mid: #2b342b;
   --accent:      #a8d4a8;
   --accent-dim:  #6aaa6a;
   --accent-glow: rgba(168, 212, 168, 0.08);
@@ -19,15 +19,19 @@
   --border-mid:  rgba(168, 212, 168, 0.18);
   --nav-bg:      #314e31;
   --nav-text:    #d4f0d4;
+  --nav-email:   #a8d4a8;
+  --nav-email-hover: #d4f0d4;
 
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
 
   --max-w: 1100px;
+  --nav-w: 12.5rem;
   --section-pad: 6rem 2rem;
 }
 
 /* --- Light Mode Variables --- */
+html.light-mode,
 body.light-mode {
   --ink:         #1a2e1a;
   --ink-muted:   #3d5c3d;
@@ -47,10 +51,11 @@ body.light-mode {
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  background-color: var(--surface);
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  scrollbar-color: #6aaa6a transparent;
+  scrollbar-color: #6aaa6a var(--surface);
   scrollbar-gutter: stable;
   scrollbar-width: auto;
 }
@@ -60,7 +65,7 @@ html::-webkit-scrollbar {
 }
 
 html::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--surface);
 }
 
 html::-webkit-scrollbar-thumb {
@@ -96,10 +101,11 @@ body {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--surface);
+  background-color: transparent;
   color: var(--ink);
   line-height: 1.7;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  padding-left: var(--nav-w);
+  transition: color 0.4s ease;
 }
 
 a {
@@ -117,25 +123,29 @@ img {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  bottom: 0;
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 2.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: var(--nav-w);
+  padding: 1.5rem 1.25rem;
   background: var(--nav-bg);
-  border-bottom: 1px solid rgba(42, 90, 42, 0.15);
-  transition: padding 0.3s ease;
+  border-right: 1px solid rgba(42, 90, 42, 0.2);
+  transition: padding 0.3s ease, width 0.3s ease;
 }
 
 .nav.scrolled {
-  padding: 0.85rem 2.5rem;
+  padding: 1.5rem 1.25rem;
 }
 
 .nav-left {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1.25rem;
+  margin-bottom: 3rem;
 }
 
 .nav-logo {
@@ -229,43 +239,103 @@ body.light-mode .theme-toggle-icon--light {
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 2.5rem;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 
 .nav-links a {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
   font-size: 0.85rem;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--nav-text);
   opacity: 0.8;
-  transition: color 0.2s, opacity 0.2s;
+  text-shadow: 0 0 0 rgba(212, 240, 212, 0);
+  transition:
+    color 0.2s,
+    opacity 0.2s,
+    padding-left 0.2s ease,
+    text-shadow 0.25s ease;
   position: relative;
+  padding: 0.4rem 0 0.4rem 0.85rem;
 }
 
 .nav-links a::after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  top: 0.55rem;
+  bottom: 0.55rem;
   left: 0;
-  width: 0;
-  height: 1px;
+  width: 2px;
+  height: auto;
   background: var(--nav-text);
-  transition: width 0.25s ease;
+  box-shadow: 0 0 0 rgba(212, 240, 212, 0);
+  opacity: 0;
+  transform: scaleY(0.2);
+  transform-origin: center;
+  transition: opacity 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  inset: 0.18rem 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(212, 240, 212, 0.16), transparent 74%);
+  opacity: 0;
+  transform: translateX(-0.4rem);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: -1;
 }
 
 .nav-links a:hover {
   opacity: 1;
   color: var(--nav-text);
+  padding-left: 1rem;
+  text-shadow: 0 0 8px rgba(212, 240, 212, 0.8), 0 0 18px rgba(168, 212, 168, 0.45);
 }
 
 .nav-links a.active {
   opacity: 1;
   color: var(--nav-text);
+  text-shadow: 0 0 6px rgba(212, 240, 212, 0.65);
+}
+
+.nav-links a:hover::before,
+.nav-links a.active::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .nav-links a.active::after {
-  width: 100%;
+  opacity: 1;
+  transform: scaleY(1);
+  box-shadow: 0 0 10px rgba(212, 240, 212, 0.85), 0 0 18px rgba(168, 212, 168, 0.4);
+}
+
+.nav-footnote {
+  margin-top: auto;
+  color: var(--nav-text);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  opacity: 0.78;
+}
+
+.nav-footnote a {
+  display: inline-block;
+  color: var(--nav-email);
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 8px rgba(168, 212, 168, 0.28);
+  transition: color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease;
+}
+
+.nav-footnote a:hover {
+  color: var(--nav-email-hover);
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(212, 240, 212, 0.65);
 }
 
 .nav-toggle {
@@ -1209,13 +1279,29 @@ body.light-mode .section-divider {
 
 /* --- Responsive: Mobile --- */
 @media (max-width: 640px) {
+  body {
+    padding-left: 0;
+  }
+
   /* Nav */
   .nav {
+    right: 0;
+    bottom: auto;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     padding: 1rem 1.25rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(42, 90, 42, 0.15);
   }
 
   .nav.scrolled {
     padding: 0.75rem 1.25rem;
+  }
+
+  .nav-left {
+    margin-bottom: 0;
   }
 
   .nav-links {
@@ -1231,8 +1317,37 @@ body.light-mode .section-divider {
     gap: 1.25rem;
   }
 
+  .nav-links a {
+    padding: 0;
+  }
+
+  .nav-links a:hover {
+    padding-left: 0;
+  }
+
+  .nav-links a::before {
+    display: none;
+  }
+
+  .nav-links a::after {
+    top: auto;
+    bottom: -3px;
+    width: 0;
+    height: 1px;
+    transform: none;
+    transition: width 0.25s ease;
+  }
+
+  .nav-links a.active::after {
+    width: 100%;
+  }
+
   .nav-links.open {
     display: flex;
+  }
+
+  .nav-footnote {
+    display: none;
   }
 
   .nav-toggle {

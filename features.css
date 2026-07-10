@@ -234,13 +234,15 @@ body.reading-mode-active .about-text em {
 }
 
 .about-section,
-.experience-section {
+.experience-section,
+.j4f-teaser-section {
   position: relative;
   z-index: 0;
 }
 
 .about-section::before,
-.experience-section::before {
+.experience-section::before,
+.j4f-teaser-section::before {
   content: '';
   position: absolute;
   top: 0;
@@ -255,13 +257,14 @@ body.reading-mode-active .about-text em {
 }
 
 .about-section > *,
-.experience-section > * {
+.experience-section > *,
+.j4f-teaser-section > * {
   position: relative;
   z-index: 1;
 }
 
 .j4f-teaser-section.surface-alt {
-  background: var(--surface-alt) !important;
+  background: transparent !important;
 }
 
 /* Explicit light mode alternating backgrounds */
@@ -275,12 +278,13 @@ body.light-mode .contact-section.surface-alt {
 }
 
 body.light-mode .about-section::before,
-body.light-mode .experience-section::before {
+body.light-mode .experience-section::before,
+body.light-mode .j4f-teaser-section::before {
   background: var(--surface-alt) !important;
 }
 
 body.light-mode .j4f-teaser-section.surface-alt {
-  background: var(--surface-alt) !important;
+  background: transparent !important;
 }
 
 @media (max-width: 900px) {

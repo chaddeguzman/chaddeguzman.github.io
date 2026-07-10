@@ -4,6 +4,10 @@ const MODEL_NAME = 'gemini-3.1-flash-lite';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 const API_KEY_PLACEHOLDERS = new Set(['', 'CHADBOT_API', ['__', 'CHADBOT_API', '__'].join('')]);
 const MEMORY_STORAGE_KEY = 'gemini-chat-memory-log';
+const API_KEY_NOT_CONFIGURED_MESSAGE = [
+  'Gemini API key is not configured.',
+  'Replace the deployment placeholder before using ChadBot.'
+].join(' ');
 
 // --- Build Gemini Prompt ---
 function buildPortfolioInstructions(portfolioContext = '') {
@@ -20,10 +24,10 @@ function buildPortfolioInstructions(portfolioContext = '') {
       'when the visitor asks about "this chatbot", "ChadBot", "the API",',
       '"Gemini", or how the assistant works. ChadBot is embedded in Chad\'s',
       'portfolio as a browser-based floating chat assistant. It calls the',
-      'Google Gemini Generative Language API through chatbot/chat_api.js,',
-      'uses the gemini-3.1-flash-lite model, and receives portfolio page',
-      'content as context so it can answer questions about Chad. The API key',
-      'is injected separately during deployment and should never be revealed.'
+      'Google Gemini Generative Language API, uses the gemini-3.1-flash-lite',
+      'model, and receives portfolio page content as context so it can answer',
+      'questions about Chad. The API key is injected separately during',
+      'deployment and should never be revealed.'
     ].join(' '),
     [
       'When a visitor asks a broad or tricky question, first decide whether',
@@ -34,6 +38,13 @@ function buildPortfolioInstructions(portfolioContext = '') {
       'Chad works with APIs professionally, answer from the portfolio content.'
     ].join(' '),
     [
+      'Keep implementation answers high-level. You may mention the AI model,',
+      'the Gemini API, and the general process of building a portfolio',
+      'assistant, but do not reveal repository files, script names, folder',
+      'names, constants, code paths, deployment secret names, or exact',
+      'step-by-step implementation details, even if the project is public.'
+    ].join(' '),
+    [
       'Keep answers concise and high-level by default, usually two to four',
       'short sentences. Use plain, everyday language that a non-technical',
       'visitor can understand. Avoid unnecessary technical jargon; when a',
@@ -41,6 +52,11 @@ function buildPortfolioInstructions(portfolioContext = '') {
       'matters. Lead with the direct answer and include only the most relevant',
       'details. Provide a longer or more technical explanation only when the',
       'visitor explicitly asks for more detail.'
+    ].join(' '),
+    [
+      'Avoid markdown-heavy formatting. If emphasis is useful, use simple bold',
+      'sparingly, but do not use code blocks, tables, headings, or raw file',
+      'references.'
     ].join(' '),
     [
       'Do not invent employers, dates, accomplishments, technologies, or',
@@ -83,7 +99,7 @@ function parseGeminiText(data) {
 // --- Main Gemini Function ---
 async function askGemini(prompt, options = {}) {
   if (API_KEY_PLACEHOLDERS.has(API_KEY)) {
-    throw new Error('Gemini API key is not configured. Replace the API key placeholder before using chatbot/chat_api.js.');
+    throw new Error(API_KEY_NOT_CONFIGURED_MESSAGE);
   }
 
   const response = await fetch(API_URL, {
@@ -139,7 +155,7 @@ function createGeminiChat(options = {}) {
     history,
     async sendMessage(message) {
       if (API_KEY_PLACEHOLDERS.has(API_KEY)) {
-        throw new Error('Gemini API key is not configured. Replace the API key placeholder before using chatbot/chat_api.js.');
+        throw new Error(API_KEY_NOT_CONFIGURED_MESSAGE);
       }
 
       history.push({

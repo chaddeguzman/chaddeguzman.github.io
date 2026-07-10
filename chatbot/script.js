@@ -243,10 +243,35 @@
   function appendMessage(role, text) {
     const message = document.createElement('div');
     message.className = `chadbot-message chadbot-message--${role}`;
-    message.textContent = text;
+    renderMessageText(message, text, role);
     chatBox.appendChild(message);
     chatBox.scrollTop = chatBox.scrollHeight;
     return message;
+  }
+
+  function renderMessageText(element, text, role = 'bot') {
+    element.textContent = '';
+
+    if (role === 'user') {
+      element.textContent = text;
+      return;
+    }
+
+    const parts = String(text || '').split(/(\*\*[^*]+\*\*)/g);
+
+    parts.forEach(part => {
+      const isBold = part.startsWith('**') && part.endsWith('**');
+      const content = isBold ? part.slice(2, -2).trim() : part.replace(/\*\*/g, '');
+
+      if (!content) return;
+
+      const node = isBold
+        ? document.createElement('strong')
+        : document.createTextNode(content);
+
+      if (isBold) node.textContent = content;
+      element.appendChild(node);
+    });
   }
 
   function appendTypingStatus() {
@@ -333,7 +358,7 @@
 
       typing.className = 'chadbot-message chadbot-message--bot';
       typing.removeAttribute('aria-live');
-      typing.textContent = chunks[index];
+      renderMessageText(typing, chunks[index], 'bot');
 
       if (index < chunks.length - 1) {
         firstTypingBubble = null;
@@ -394,7 +419,11 @@
       }
 
       typing.className = 'chadbot-message chadbot-message--error';
-      typing.textContent = error.message || 'Something went wrong. Please try again.';
+      renderMessageText(
+        typing,
+        error.message || 'Something went wrong. Please try again.',
+        'error'
+      );
     }
 
     sendBtn.disabled = false;

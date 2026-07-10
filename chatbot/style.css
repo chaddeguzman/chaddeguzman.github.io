@@ -219,6 +219,11 @@
   overflow-wrap: anywhere;
 }
 
+.chadbot-message strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .chadbot-message--user {
   align-self: flex-end;
   background: var(--surface-mid);

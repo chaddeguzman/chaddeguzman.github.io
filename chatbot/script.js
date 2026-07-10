@@ -749,7 +749,7 @@
     if (!cleanedName) return;
 
     const existingNameMemory = savedMemory.find(memory => memory.type === 'visitor-name');
-    const nameText = `Visitor name: ${cleanedName}`;
+    const nameText = `Visitor: ${cleanedName}`;
 
     if (existingNameMemory) {
       existingNameMemory.text = nameText;

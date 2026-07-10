@@ -21,6 +21,12 @@
   const promptGateStorageKey = 'chadbot-prompt-gate';
   const replyChunkMinWords = 8;
   const replyChunkMaxWords = 28;
+  const usageNoticeMessage = [
+    'Quick note: you can ask up to 10 questions for now.',
+    'After that, please wait 3 minutes to refresh the token limit',
+    'and keep answers accurate.'
+  ].join(' ');
+  const clearChatMessage = 'Chat cleared. What would you like to talk about?';
   let dragState = null;
   let dragFrameId = 0;
   let ignoreClicksUntil = 0;
@@ -77,7 +83,7 @@
     positionPanel();
 
     if (!hasShownUsageNotice) {
-      appendMessage('bot', 'Quick note: you can ask up to 10 questions for now. After that, please wait 3 minutes to refresh the token limit and keep answers accurate.');
+      appendMessage('bot', usageNoticeMessage);
       hasShownUsageNotice = true;
     }
 
@@ -347,7 +353,7 @@
     const cooldownRemainingMs = gate.cooldownUntil - Date.now();
 
     if (cooldownRemainingMs > 0) {
-      appendMessage('bot', `Please wait ${formatCooldown(cooldownRemainingMs)} before asking more questions. This keeps ChadBot's answers focused and accurate.`);
+      appendMessage('bot', buildCooldownMessage(cooldownRemainingMs));
       return;
     }
 
@@ -437,9 +443,17 @@
     return `${minutes} minute${minutes === 1 ? '' : 's'} and ${seconds} second${seconds === 1 ? '' : 's'}`;
   }
 
+  function buildCooldownMessage(milliseconds) {
+    return [
+      `Kindly wait ${formatCooldown(milliseconds)} before asking more questions.`,
+      'This keeps ChadBot\'s answers focused and accurate.'
+    ].join(' ');
+  }
+
   function clearChat() {
     chat.history.length = 0;
-    chatBox.innerHTML = '<div class="chadbot-message chadbot-message--bot">Chat cleared. What would you like to talk about?</div>';
+    chatBox.innerHTML = '';
+    appendMessage('bot', clearChatMessage);
     chatInput.focus();
   }
 

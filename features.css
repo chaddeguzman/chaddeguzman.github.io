@@ -9,11 +9,31 @@
   color: var(--ink-muted);
   font-family: var(--font-body);
   font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0 0 0 rgba(168, 212, 168, 0);
+  transition:
+    background 0.32s ease,
+    border-color 0.32s ease,
+    color 0.32s ease,
+    box-shadow 0.32s ease,
+    transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reading-mode-toggle::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at 30% 50%, rgba(168, 212, 168, 0.28), transparent 58%);
+  opacity: 0;
+  transform: translateX(-35%) scale(0.75);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: -1;
 }
 
 .reading-mode-toggle:hover {
@@ -27,6 +47,13 @@
   background: var(--accent);
   border-color: var(--accent);
   color: var(--surface);
+  box-shadow: 0 12px 28px rgba(106, 170, 106, 0.2);
+}
+
+.reading-mode-toggle.is-active::before,
+body.reading-mode-transitioning .reading-mode-toggle::before {
+  opacity: 1;
+  transform: translateX(15%) scale(1.05);
 }
 
 .reading-mode-toggle__key {
@@ -42,6 +69,19 @@
   border: 1px solid var(--border-mid);
   font-size: 0.75rem;
   line-height: 1;
+  transform-origin: center;
+  transition:
+    background 0.32s ease,
+    border-color 0.32s ease,
+    color 0.32s ease,
+    transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.reading-mode-toggle.is-active .reading-mode-toggle__key {
+  background: rgba(12, 16, 13, 0.16);
+  border-color: rgba(12, 16, 13, 0.22);
+  color: var(--surface);
+  transform: scale(1.08);
 }
 
 .about-heading-row {
@@ -56,6 +96,54 @@
   margin-bottom: 0;
 }
 
+.about-section {
+  transition:
+    background 0.62s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.62s ease,
+    max-width 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-section .section-label,
+.about-image-wrap,
+.about-stats {
+  transition:
+    opacity 0.5s ease,
+    filter 0.5s ease,
+    transform 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-grid {
+  transition:
+    max-width 0.62s cubic-bezier(0.2, 0.8, 0.2, 1),
+    gap 0.62s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-text {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transform: translateY(0) scale(1);
+  transition:
+    background 0.62s ease,
+    border-color 0.62s ease,
+    border-radius 0.62s ease,
+    box-shadow 0.62s ease,
+    padding 0.62s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-text p,
+.about-text em {
+  transition:
+    color 0.5s ease,
+    font-size 0.62s cubic-bezier(0.2, 0.8, 0.2, 1),
+    line-height 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+body.reading-mode-transitioning .about-section {
+  animation: reading-mode-breathe 0.72s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 body.reading-mode-active .about-section {
   max-width: 100%;
   background: var(--surface-alt);
@@ -68,6 +156,7 @@ body.reading-mode-active .about-image-wrap,
 body.reading-mode-active .about-stats {
   opacity: 0.22;
   filter: grayscale(0.4);
+  transform: scale(0.97);
 }
 
 body.reading-mode-active .about-grid {
@@ -76,14 +165,16 @@ body.reading-mode-active .about-grid {
   grid-template-columns: 0.7fr 1.8fr;
   gap: 3rem;
   align-items: start;
+  transform: translateY(-0.35rem);
 }
 
 body.reading-mode-active .about-text {
   background: var(--surface);
   border: 1px solid var(--border-mid);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.26), 0 0 34px rgba(106, 170, 106, 0.1);
   padding: 2.5rem;
   border-radius: 12px;
+  transform: translateY(-0.35rem) scale(1.01);
 }
 
 body.reading-mode-active .about-text p {
@@ -96,6 +187,20 @@ body.reading-mode-active .about-text p {
 body.reading-mode-active .about-text em {
   color: var(--accent);
   font-style: normal;
+}
+
+@keyframes reading-mode-breathe {
+  0% {
+    filter: saturate(1);
+  }
+
+  40% {
+    filter: saturate(1.1) brightness(1.04);
+  }
+
+  100% {
+    filter: saturate(1);
+  }
 }
 
 /* Remove all Hero background glow effects */

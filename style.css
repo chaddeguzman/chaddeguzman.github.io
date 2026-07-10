@@ -52,11 +52,11 @@ html {
   overflow-y: scroll;
   scrollbar-color: #6aaa6a transparent;
   scrollbar-gutter: stable;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
 }
 
 html::-webkit-scrollbar {
-  width: 0.65rem;
+  width: 1rem;
 }
 
 html::-webkit-scrollbar-track {
@@ -68,6 +68,7 @@ html::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
+  box-shadow: 0 0 8px rgba(106, 170, 106, 0.45);
 }
 
 html::-webkit-scrollbar-thumb:hover {
@@ -85,7 +86,7 @@ html::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(90deg, var(--accent-dim), var(--accent));
   z-index: 200;
   transition: width 0.05s linear;
-  box-shadow: 0 0 8px rgba(168, 212, 168, 0.4);
+  box-shadow: 0 0 8px rgba(168, 212, 168, 0.65);
 }
 
 /* Global overflow guard */

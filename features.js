@@ -39,8 +39,17 @@ if (statsContainer) {
 const readingModeToggle = document.getElementById('readingModeToggle');
 
 if (readingModeToggle) {
+  let readingModeTransitionTimer;
+
   readingModeToggle.addEventListener('click', () => {
     const isActive = document.body.classList.toggle('reading-mode-active');
+
+    document.body.classList.add('reading-mode-transitioning');
+    window.clearTimeout(readingModeTransitionTimer);
+    readingModeTransitionTimer = window.setTimeout(() => {
+      document.body.classList.remove('reading-mode-transitioning');
+    }, 720);
+
     readingModeToggle.classList.toggle('is-active', isActive);
     readingModeToggle.setAttribute('aria-pressed', String(isActive));
     readingModeToggle.querySelector('.reading-mode-toggle__text').textContent = isActive ? 'Exit Reading Mode' : 'Reading Mode';

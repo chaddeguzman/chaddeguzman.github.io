@@ -597,9 +597,7 @@
 
       <div class="chadbot-tools" aria-label="Chat tools">
         <button class="chadbot-action-btn" id="chadbotClearBtn" type="button">Clear Chat</button>
-        <button class="chadbot-action-btn" id="chadbotClearMemoryBtn" type="button">
-          Clear Memory
-        </button>
+        <button class="chadbot-action-btn" id="chadbotClearMemoryBtn" type="button">Memory</button>
       </div>
 
       <div class="chadbot-chat-box" id="chadbotChatBox" aria-live="polite">
@@ -619,6 +617,39 @@
         >
         <button class="chadbot-send-btn" id="chadbotSendBtn" type="submit">Send</button>
       </form>
+    </section>
+
+    <section
+      class="chadbot-memory-modal"
+      id="chadbotMemoryModal"
+      aria-labelledby="chadbotMemoryTitle"
+      hidden
+    >
+      <header class="chadbot-memory-header">
+        <div>
+          <p class="chadbot-eyebrow">Local Memory</p>
+          <h3 class="chadbot-memory-title" id="chadbotMemoryTitle">Saved Memory</h3>
+        </div>
+        <button
+          class="chadbot-icon-btn"
+          id="chadbotCloseMemoryBtn"
+          type="button"
+          aria-label="Close memory"
+        >
+          x
+        </button>
+      </header>
+
+      <div class="chadbot-memory-list" id="chadbotMemoryList"></div>
+
+      <footer class="chadbot-memory-actions">
+        <button class="chadbot-action-btn" id="chadbotDeleteMemoryBtn" type="button">
+          Delete Memory
+        </button>
+        <button class="chadbot-action-btn" id="chadbotExitMemoryBtn" type="button">
+          Exit
+        </button>
+      </footer>
     </section>
 
     <button

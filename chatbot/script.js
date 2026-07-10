@@ -14,6 +14,11 @@
   const sendBtn = document.getElementById('chadbotSendBtn');
   const clearBtn = document.getElementById('chadbotClearBtn');
   const clearMemoryBtn = document.getElementById('chadbotClearMemoryBtn');
+  const memoryModal = document.getElementById('chadbotMemoryModal');
+  const memoryList = document.getElementById('chadbotMemoryList');
+  const closeMemoryBtn = document.getElementById('chadbotCloseMemoryBtn');
+  const exitMemoryBtn = document.getElementById('chadbotExitMemoryBtn');
+  const deleteMemoryBtn = document.getElementById('chadbotDeleteMemoryBtn');
 
   const portfolioContext = collectPortfolioContext();
   const memoryStorageKey = GeminiApi.MEMORY_STORAGE_KEY || 'gemini-chat-memory-log';
@@ -39,6 +44,8 @@
   const clearChatMessage = 'Chat cleared. What would you like to talk about?';
   let dragState = null;
   let dragFrameId = 0;
+  let memoryDragState = null;
+  let memoryDragFrameId = 0;
   let ignoreClicksUntil = 0;
   let hasShownUsageNotice = false;
   let promptGateFallback = {
@@ -76,11 +83,25 @@
   });
 
   clearBtn.addEventListener('click', clearChat);
-  clearMemoryBtn.addEventListener('click', clearMemory);
+  clearMemoryBtn.addEventListener('click', openMemoryModal);
+  closeMemoryBtn.addEventListener('click', closeMemoryModal);
+  exitMemoryBtn.addEventListener('click', closeMemoryModal);
+  deleteMemoryBtn.addEventListener('click', clearMemory);
+  memoryModal.addEventListener('pointerdown', event => {
+    if (event.target.closest('button, a, [contenteditable="true"]')) return;
+    startMemoryDrag(event);
+  });
+  memoryModal.addEventListener('pointermove', moveMemoryDrag);
+  memoryModal.addEventListener('pointerup', finishMemoryDrag);
+  memoryModal.addEventListener('pointercancel', finishMemoryDrag);
   window.addEventListener('resize', handleViewportResize);
 
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
+    if (!memoryModal.hidden) {
+      closeMemoryModal();
+      return;
+    }
     if (root.classList.contains('chadbot-open')) closePanel();
   });
 
@@ -113,7 +134,39 @@
     root.classList.remove('chadbot-open');
     launcher.setAttribute('aria-expanded', 'false');
     panel.setAttribute('hidden', '');
+    memoryModal.setAttribute('hidden', '');
     launcher.focus();
+  }
+
+  function openMemoryModal() {
+    renderMemoryModal();
+    memoryModal.removeAttribute('hidden');
+    positionMemoryModal();
+    closeMemoryBtn.focus();
+  }
+
+  function closeMemoryModal() {
+    memoryModal.setAttribute('hidden', '');
+    clearMemoryBtn.focus();
+  }
+
+  function renderMemoryModal() {
+    memoryList.innerHTML = '';
+
+    if (!savedMemory.length) {
+      const emptyMessage = document.createElement('p');
+      emptyMessage.className = 'chadbot-memory-empty';
+      emptyMessage.textContent = 'No memory stored yet.';
+      memoryList.appendChild(emptyMessage);
+      return;
+    }
+
+    savedMemory.forEach(memory => {
+      const item = document.createElement('div');
+      item.className = 'chadbot-memory-item';
+      item.textContent = memory.text;
+      memoryList.appendChild(item);
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -223,6 +276,80 @@
     }
   }
 
+  function startMemoryDrag(event) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+    const rect = memoryModal.getBoundingClientRect();
+    memoryDragState = {
+      captureTarget: event.currentTarget,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startLeft: rect.left,
+      startTop: rect.top,
+      nextLeft: rect.left,
+      nextTop: rect.top,
+      moved: false
+    };
+
+    memoryDragState.captureTarget.setPointerCapture(event.pointerId);
+    memoryModal.classList.add('chadbot-memory-dragging');
+  }
+
+  function moveMemoryDrag(event) {
+    if (!memoryDragState || event.pointerId !== memoryDragState.pointerId) return;
+
+    const rawDeltaX = event.clientX - memoryDragState.startX;
+    const rawDeltaY = event.clientY - memoryDragState.startY;
+
+    if (!memoryDragState.moved && Math.hypot(rawDeltaX, rawDeltaY) < dragThreshold) return;
+
+    memoryDragState.moved = true;
+    event.preventDefault();
+
+    const maxLeft = Math.max(viewportMargin, window.innerWidth - memoryModal.offsetWidth - viewportMargin);
+    const maxTop = Math.max(viewportMargin, window.innerHeight - memoryModal.offsetHeight - viewportMargin);
+    memoryDragState.nextLeft = clamp(memoryDragState.startLeft + rawDeltaX, viewportMargin, maxLeft);
+    memoryDragState.nextTop = clamp(memoryDragState.startTop + rawDeltaY, viewportMargin, maxTop);
+
+    if (!memoryDragFrameId) {
+      memoryDragFrameId = window.requestAnimationFrame(renderMemoryDragFrame);
+    }
+  }
+
+  function finishMemoryDrag(event) {
+    if (!memoryDragState || event.pointerId !== memoryDragState.pointerId) return;
+
+    const captureTarget = memoryDragState.captureTarget;
+
+    if (memoryDragFrameId) {
+      window.cancelAnimationFrame(memoryDragFrameId);
+      memoryDragFrameId = 0;
+    }
+
+    if (memoryDragState.moved) applyMemoryDragPosition(memoryDragState);
+
+    memoryDragState = null;
+    memoryModal.classList.remove('chadbot-memory-dragging');
+
+    if (captureTarget.hasPointerCapture(event.pointerId)) {
+      captureTarget.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  function renderMemoryDragFrame() {
+    memoryDragFrameId = 0;
+    if (!memoryDragState?.moved) return;
+    applyMemoryDragPosition(memoryDragState);
+  }
+
+  function applyMemoryDragPosition(state) {
+    memoryModal.style.left = `${state.nextLeft}px`;
+    memoryModal.style.top = `${state.nextTop}px`;
+    memoryModal.style.right = 'auto';
+    memoryModal.style.bottom = 'auto';
+  }
+
   // -------------------------------------------------------------------------
   // Positioning Helpers
   // -------------------------------------------------------------------------
@@ -248,6 +375,26 @@
     panel.style.bottom = 'auto';
   }
 
+  function positionMemoryModal() {
+    if (memoryModal.style.left) return;
+
+    const panelRect = panel.hidden ? null : panel.getBoundingClientRect();
+    const modalRect = memoryModal.getBoundingClientRect();
+    const baseLeft = panelRect
+      ? panelRect.left + 14
+      : window.innerWidth - modalRect.width - 32;
+    const baseTop = panelRect
+      ? panelRect.top + 56
+      : window.innerHeight - modalRect.height - 128;
+    const maxLeft = Math.max(viewportMargin, window.innerWidth - modalRect.width - viewportMargin);
+    const maxTop = Math.max(viewportMargin, window.innerHeight - modalRect.height - viewportMargin);
+
+    memoryModal.style.left = `${clamp(baseLeft, viewportMargin, maxLeft)}px`;
+    memoryModal.style.top = `${clamp(baseTop, viewportMargin, maxTop)}px`;
+    memoryModal.style.right = 'auto';
+    memoryModal.style.bottom = 'auto';
+  }
+
   function handleViewportResize() {
     const rect = root.getBoundingClientRect();
 
@@ -259,6 +406,18 @@
     }
 
     if (!panel.hidden) positionPanel();
+    if (!memoryModal.hidden) keepMemoryModalInViewport();
+  }
+
+  function keepMemoryModalInViewport() {
+    const rect = memoryModal.getBoundingClientRect();
+    const maxLeft = Math.max(viewportMargin, window.innerWidth - memoryModal.offsetWidth - viewportMargin);
+    const maxTop = Math.max(viewportMargin, window.innerHeight - memoryModal.offsetHeight - viewportMargin);
+
+    memoryModal.style.left = `${clamp(rect.left, viewportMargin, maxLeft)}px`;
+    memoryModal.style.top = `${clamp(rect.top, viewportMargin, maxTop)}px`;
+    memoryModal.style.right = 'auto';
+    memoryModal.style.bottom = 'auto';
   }
 
   function clamp(value, minimum, maximum) {
@@ -528,8 +687,8 @@
     savedMemory.length = 0;
     saveMemory(savedMemory);
     chat.updateMemoryContext('');
-    appendMessage('bot', 'Memory cleared. I will treat this as a fresh conversation.');
-    chatInput.focus();
+    renderMemoryModal();
+    closeMemoryBtn.focus();
   }
 
   function loadSavedMemory() {
@@ -560,6 +719,7 @@
       savedMemory.length = 0;
       saveMemory(savedMemory);
       chat.updateMemoryContext('');
+      if (!memoryModal.hidden) renderMemoryModal();
       return;
     }
 
@@ -581,6 +741,7 @@
 
     saveMemory(savedMemory);
     chat.updateMemoryContext(formatSavedMemory(savedMemory));
+    if (!memoryModal.hidden) renderMemoryModal();
   }
 
   function saveVisitorName(name) {
@@ -603,6 +764,7 @@
 
     saveMemory(savedMemory);
     chat.updateMemoryContext(formatSavedMemory(savedMemory));
+    if (!memoryModal.hidden) renderMemoryModal();
   }
 
   function getSavedVisitorName(memory) {
@@ -633,12 +795,26 @@
   }
 
   function cleanVisitorName(name) {
-    return String(name || '')
+    const cleanedName = String(name || '')
       .replace(/[.!?]+$/g, '')
       .replace(/\b(?:and|but|because|from|working|asking|looking)\b.*$/i, '')
       .trim()
       .split(/\s+/)
       .slice(0, 4)
+      .join(' ');
+
+    return formatVisitorName(cleanedName);
+  }
+
+  function formatVisitorName(name) {
+    return String(name || '')
+      .split(' ')
+      .map(part => part
+        .split('-')
+        .map(namePart => (
+          namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase()
+        ))
+        .join('-'))
       .join(' ');
   }
 

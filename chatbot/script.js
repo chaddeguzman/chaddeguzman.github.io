@@ -13,9 +13,16 @@
   const chatInput = document.getElementById('chadbotChatInput');
   const sendBtn = document.getElementById('chadbotSendBtn');
   const clearBtn = document.getElementById('chadbotClearBtn');
+  const clearMemoryBtn = document.getElementById('chadbotClearMemoryBtn');
 
   const portfolioContext = collectPortfolioContext();
-  const chat = GeminiApi.createGeminiChat({ portfolioContext });
+  const memoryStorageKey = GeminiApi.MEMORY_STORAGE_KEY || 'gemini-chat-memory-log';
+  const savedMemory = loadSavedMemory();
+  const savedVisitorName = getSavedVisitorName(savedMemory);
+  const chat = GeminiApi.createGeminiChat({
+    portfolioContext,
+    memoryContext: formatSavedMemory(savedMemory)
+  });
   const dragThreshold = 6;
   const viewportMargin = 8;
   const botReplyDelayMs = 2000;
@@ -38,6 +45,8 @@
     count: 0,
     cooldownUntil: 0
   };
+
+  setInitialGreeting(savedVisitorName);
 
   // -------------------------------------------------------------------------
   // Event Listeners
@@ -67,6 +76,7 @@
   });
 
   clearBtn.addEventListener('click', clearChat);
+  clearMemoryBtn.addEventListener('click', clearMemory);
   window.addEventListener('resize', handleViewportResize);
 
   document.addEventListener('keydown', event => {
@@ -420,6 +430,7 @@
 
     chatInput.value = '';
     appendMessage('user', message);
+    rememberUserMessage(message);
 
     const typing = appendTypingStatus();
     sendBtn.disabled = true;
@@ -511,6 +522,185 @@
     chatBox.innerHTML = '';
     appendMessage('bot', clearChatMessage);
     chatInput.focus();
+  }
+
+  function clearMemory() {
+    savedMemory.length = 0;
+    saveMemory(savedMemory);
+    chat.updateMemoryContext('');
+    appendMessage('bot', 'Memory cleared. I will treat this as a fresh conversation.');
+    chatInput.focus();
+  }
+
+  function loadSavedMemory() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(memoryStorageKey) || '[]');
+      return Array.isArray(saved) ? saved.filter(memory => memory?.text) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function saveMemory(memory) {
+    try {
+      localStorage.setItem(memoryStorageKey, JSON.stringify(memory));
+    } catch (error) {
+      // localStorage can be unavailable in private or restricted browsing contexts.
+    }
+  }
+
+  function rememberUserMessage(message) {
+    const visitorName = extractVisitorName(message);
+    if (visitorName) saveVisitorName(visitorName);
+
+    const memoryText = extractMemoryFromMessage(message);
+    if (!memoryText) return;
+
+    if (memoryText === '__CLEAR_CHADBOT_MEMORY__') {
+      savedMemory.length = 0;
+      saveMemory(savedMemory);
+      chat.updateMemoryContext('');
+      return;
+    }
+
+    const normalizedMemory = normalizeText(memoryText).slice(0, 180);
+    const alreadySaved = savedMemory.some(memory => (
+      memory.text.toLowerCase() === normalizedMemory.toLowerCase()
+    ));
+
+    if (alreadySaved) return;
+
+    savedMemory.push({
+      text: normalizedMemory,
+      createdAt: new Date().toISOString()
+    });
+
+    if (savedMemory.length > 12) {
+      savedMemory.splice(0, savedMemory.length - 12);
+    }
+
+    saveMemory(savedMemory);
+    chat.updateMemoryContext(formatSavedMemory(savedMemory));
+  }
+
+  function saveVisitorName(name) {
+    const cleanedName = cleanVisitorName(name);
+    if (!cleanedName) return;
+
+    const existingNameMemory = savedMemory.find(memory => memory.type === 'visitor-name');
+    const nameText = `Visitor name: ${cleanedName}`;
+
+    if (existingNameMemory) {
+      existingNameMemory.text = nameText;
+      existingNameMemory.updatedAt = new Date().toISOString();
+    } else {
+      savedMemory.push({
+        type: 'visitor-name',
+        text: nameText,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    saveMemory(savedMemory);
+    chat.updateMemoryContext(formatSavedMemory(savedMemory));
+  }
+
+  function getSavedVisitorName(memory) {
+    const nameMemory = [...memory].reverse().find(item => (
+      item.type === 'visitor-name' || /^visitor name:/i.test(item.text || '')
+    ));
+
+    if (!nameMemory) return '';
+    return cleanVisitorName(String(nameMemory.text).replace(/^visitor name:\s*/i, ''));
+  }
+
+  function extractVisitorName(message) {
+    const text = normalizeText(message);
+    const patterns = [
+      /^remember(?: that)? my name is\s+(.+)$/i,
+      /^please remember(?: that)? my name is\s+(.+)$/i,
+      /^(?:hi|hello|hey)[,.!\s]+(?:i am|i'm|im|my name is)\s+(.+)$/i,
+      /^(?:i am|i'm|im|my name is)\s+(.+)$/i
+    ];
+
+    for (const pattern of patterns) {
+      const match = text.match(pattern);
+      const name = cleanVisitorName(match?.[1]);
+      if (isLikelyVisitorName(name)) return name;
+    }
+
+    return '';
+  }
+
+  function cleanVisitorName(name) {
+    return String(name || '')
+      .replace(/[.!?]+$/g, '')
+      .replace(/\b(?:and|but|because|from|working|asking|looking)\b.*$/i, '')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 4)
+      .join(' ');
+  }
+
+  function isLikelyVisitorName(name) {
+    if (!name) return false;
+    if (/^(?:a|an|the|from|working|asking|looking|interested)\b/i.test(name)) return false;
+    return /^[A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3}$/.test(name);
+  }
+
+  function extractMemoryFromMessage(message) {
+    const text = normalizeText(message);
+    const lowerText = text.toLowerCase();
+
+    if (/^(forget|clear|delete|reset) (my |the )?(chadbot )?memory\b/.test(lowerText)) {
+      return '__CLEAR_CHADBOT_MEMORY__';
+    }
+
+    const patterns = [
+      /^remember(?: that)? (.+)$/i,
+      /^please remember(?: that)? (.+)$/i,
+      /^i prefer (.+)$/i,
+      /^i like (.+)$/i,
+      /^my role is (.+)$/i,
+      /^my job is (.+)$/i,
+      /^i work (?:as|in|at|with) (.+)$/i
+    ];
+
+    for (const pattern of patterns) {
+      const match = text.match(pattern);
+      if (match?.[1]) return cleanMemoryText(match[1]);
+    }
+
+    return '';
+  }
+
+  function setInitialGreeting(name) {
+    if (!name) return;
+
+    const initialBotMessage = chatBox.querySelector('.chadbot-message--bot');
+    if (!initialBotMessage) return;
+
+    renderMessageText(
+      initialBotMessage,
+      `Welcome back, ${name}. What can I do for you?`,
+      'bot'
+    );
+  }
+
+  function cleanMemoryText(text) {
+    return String(text || '')
+      .replace(/[.!?]+$/g, '')
+      .trim();
+  }
+
+  function formatSavedMemory(memory) {
+    const memoryLines = memory
+      .map(item => normalizeText(item.text))
+      .filter(Boolean)
+      .slice(-12);
+
+    if (!memoryLines.length) return '';
+    return memoryLines.map(item => `- ${item}`).join('\n');
   }
 
   function collectPortfolioContext() {

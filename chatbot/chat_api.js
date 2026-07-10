@@ -10,7 +10,7 @@ const API_KEY_NOT_CONFIGURED_MESSAGE = [
 ].join(' ');
 
 // --- Build Gemini Prompt ---
-function buildPortfolioInstructions(portfolioContext = '') {
+function buildPortfolioInstructions(portfolioContext = '', memoryContext = '') {
   const instructions = [
     'You are ChadBot, the professional portfolio assistant for Chad De Guzman.',
     [
@@ -54,6 +54,12 @@ function buildPortfolioInstructions(portfolioContext = '') {
       'visitor explicitly asks for more detail.'
     ].join(' '),
     [
+      'Use saved visitor memory only when it helps answer the current',
+      'question naturally, such as remembering the visitor\'s name, role,',
+      'or preferences. Do not mention browser storage or memory mechanics',
+      'unless the visitor asks how memory works.'
+    ].join(' '),
+    [
       'Avoid markdown-heavy formatting. If emphasis is useful, use simple bold',
       'sparingly, but do not use code blocks, tables, headings, or raw file',
       'references.'
@@ -71,11 +77,14 @@ function buildPortfolioInstructions(portfolioContext = '') {
   return `${instructions}
 
 PORTFOLIO CONTENT
-${portfolioContext || 'No portfolio content was provided.'}`;
+${portfolioContext || 'No portfolio content was provided.'}
+
+SAVED VISITOR MEMORY
+${memoryContext || 'No saved visitor memory was provided.'}`;
 }
 
-function buildPrompt(userInput, portfolioContext = '') {
-  return `${buildPortfolioInstructions(portfolioContext)}
+function buildPrompt(userInput, portfolioContext = '', memoryContext = '') {
+  return `${buildPortfolioInstructions(portfolioContext, memoryContext)}
 
 VISITOR QUESTION
 ${userInput}`;
@@ -110,7 +119,9 @@ async function askGemini(prompt, options = {}) {
     body: JSON.stringify({
       contents: [
         {
-          parts: [{ text: buildPrompt(prompt, options.portfolioContext) }]
+          parts: [{
+            text: buildPrompt(prompt, options.portfolioContext, options.memoryContext)
+          }]
         }
       ],
       generationConfig: {
@@ -150,9 +161,13 @@ async function askGeminiJson(prompt, options = {}) {
 function createGeminiChat(options = {}) {
   const history = [...(options.history || [])];
   const portfolioContext = options.portfolioContext || '';
+  let memoryContext = options.memoryContext || '';
 
   return {
     history,
+    updateMemoryContext(nextMemoryContext = '') {
+      memoryContext = nextMemoryContext;
+    },
     async sendMessage(message) {
       if (API_KEY_PLACEHOLDERS.has(API_KEY)) {
         throw new Error(API_KEY_NOT_CONFIGURED_MESSAGE);
@@ -170,7 +185,9 @@ function createGeminiChat(options = {}) {
         },
         body: JSON.stringify({
           systemInstruction: {
-            parts: [{ text: buildPortfolioInstructions(portfolioContext) }]
+            parts: [{
+              text: buildPortfolioInstructions(portfolioContext, memoryContext)
+            }]
           },
           contents: history,
           generationConfig: {

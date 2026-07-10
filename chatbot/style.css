@@ -171,7 +171,7 @@
 
 .chadbot-tools {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.4rem;
   padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--border);
@@ -201,12 +201,30 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  scrollbar-width: none;
+  scrollbar-color: #6aaa6a var(--surface-alt);
+  scrollbar-width: thin;
   touch-action: pan-y;
 }
 
 .chadbot-chat-box::-webkit-scrollbar {
-  display: none;
+  width: 0.45rem;
+}
+
+.chadbot-chat-box::-webkit-scrollbar-track {
+  background: var(--surface-alt);
+}
+
+.chadbot-chat-box::-webkit-scrollbar-thumb {
+  background: #6aaa6a;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  box-shadow: 0 0 8px rgba(106, 170, 106, 0.45);
+}
+
+.chadbot-chat-box::-webkit-scrollbar-thumb:hover {
+  background: #a8d4a8;
+  background-clip: padding-box;
 }
 
 .chadbot-message {

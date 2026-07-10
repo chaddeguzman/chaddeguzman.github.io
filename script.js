@@ -229,9 +229,10 @@ async function renderGithubContributions() {
     renderContributionCells(grid, weeks);
 
     const total = Number(data.totalContributions) || 0;
-    const from = formatContributionDate(data.from);
-    const to = formatContributionDate(data.to);
-    summary.textContent = `${total.toLocaleString()} contributions from ${from} to ${to}`;
+    summary.textContent = [
+      `Total of ${total.toLocaleString()} contributions`,
+      `from ${formatContributionRange(data.from, data.to)}`
+    ].join(' ');
     grid.setAttribute('aria-label', `${total.toLocaleString()} GitHub contributions in the last year.`);
   } catch (error) {
     summary.textContent = 'Contribution activity is temporarily unavailable.';
@@ -355,14 +356,16 @@ function clampContributionLevel(level) {
   return Math.min(Math.max(Math.round(numericLevel), 0), 4);
 }
 
-function formatContributionDate(value) {
-  if (!value) return 'unknown';
+function formatContributionRange(from, to) {
+  if (!from || !to) return 'an unknown date range';
 
-  return new Date(`${value}T00:00:00`).toLocaleDateString('en', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
+  const fromDate = new Date(`${from}T00:00:00`);
+  const toDate = new Date(`${to}T00:00:00`);
+  const fromMonth = fromDate.toLocaleString('en', { month: 'short' });
+  const toMonth = toDate.toLocaleString('en', { month: 'short' });
+  const toYear = toDate.getFullYear();
+
+  return `${fromMonth} to ${toMonth} ${toYear}`;
 }
 
 

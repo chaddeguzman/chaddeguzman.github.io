@@ -16,7 +16,6 @@
   const dragThreshold = 6;
   const viewportMargin = 8;
   const botReplyDelayMs = 2000;
-  const botChunkDelayMs = 420;
   let dragState = null;
   let dragFrameId = 0;
   let ignoreClicksUntil = 0;
@@ -263,13 +262,23 @@
       .filter(Boolean);
   }
 
-  async function appendBotReply(reply) {
+  async function appendBotReply(reply, firstTypingBubble) {
     const chunks = splitReplyIntoChunks(reply);
 
     for (let index = 0; index < chunks.length; index += 1) {
-      appendMessage('bot', chunks[index]);
+      let typing = firstTypingBubble;
+
+      if (!typing) {
+        typing = appendTypingStatus();
+        await sleep(botReplyDelayMs);
+      }
+
+      typing.className = 'chadbot-message chadbot-message--bot';
+      typing.removeAttribute('aria-live');
+      typing.textContent = chunks[index];
+
       if (index < chunks.length - 1) {
-        await sleep(botChunkDelayMs);
+        firstTypingBubble = null;
       }
     }
   }
@@ -298,8 +307,7 @@
         await sleep(botReplyDelayMs - elapsed);
       }
 
-      typing.remove();
-      await appendBotReply(reply);
+      await appendBotReply(reply, typing);
     } catch (error) {
       const elapsed = performance.now() - startedAt;
 

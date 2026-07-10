@@ -1,0 +1,65 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare static site
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude '_site' \
+            ./ _site/
+
+          if [ -z "${CHADBOT_API}" ]; then
+            echo "CHADBOT_API secret is not configured." >&2
+            exit 1
+          fi
+
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          target = Path("_site/chatbot/chat_api.js")
+          api_key = os.environ["CHADBOT_API"]
+          content = target.read_text(encoding="utf-8")
+          content = content.replace("__CHADBOT_API__", api_key)
+          target.write_text(content, encoding="utf-8")
+          PY
+        env:
+          CHADBOT_API: ${{ secrets.CHADBOT_API || vars.CHADBOT_API }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

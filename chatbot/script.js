@@ -770,11 +770,11 @@
 
   function getSavedVisitorName(memory) {
     const nameMemory = [...memory].reverse().find(item => (
-      item.type === 'visitor-name' || /^visitor name:/i.test(item.text || '')
+      item.type === 'visitor-name' || /^visitor(?: name)?:/i.test(item.text || '')
     ));
 
     if (!nameMemory) return '';
-    return cleanVisitorName(String(nameMemory.text).replace(/^visitor name:\s*/i, ''));
+    return cleanVisitorName(String(nameMemory.text).replace(/^visitor(?: name)?:\s*/i, ''));
   }
 
   function extractVisitorName(message) {

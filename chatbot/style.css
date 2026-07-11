@@ -144,12 +144,12 @@
 
 .chadbot-header .chadbot-eyebrow,
 .chadbot-header .chadbot-title,
-.chadbot-header .chadbot-drag-hint,
-.chadbot-header .chadbot-icon-btn {
-  color: #d7dcd2;
+.chadbot-header .chadbot-drag-hint {
+  color: #a7c3a7;
 }
 
 .chadbot-header .chadbot-icon-btn {
+  color: #d7dcd2;
   border-color: color-mix(in srgb, currentColor 45%, transparent);
 }
 

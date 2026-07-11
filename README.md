@@ -86,6 +86,19 @@ The design uses CSS custom properties for easy theme switching:
 3. Customize content in HTML sections
 4. Modify colors and styles in `style.css` using the CSS variables
 
+### ChadBot API configuration
+
+ChadBot uses one GitHub Actions secret named `CHADBOT_API`. The Pages deployment
+replaces the API placeholder in the generated site and fails when the secret is
+missing. Because GitHub Pages serves browser-side JavaScript, visitors can still
+inspect the deployed key even though it is not committed to the repository.
+
+Restrict the key in Google Cloud to the Generative Language API and to the HTTP
+referrer `https://chaddeguzman.github.io/*`. Configure project quota and billing
+alerts there as well. The chatbot's prompt counter and three-minute cooldown are
+user-experience controls only; browser storage can be cleared, so they are not a
+security or quota-enforcement boundary.
+
 ## 🎨 Customization
 
 ### Change Theme Colors

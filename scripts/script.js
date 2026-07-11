@@ -189,17 +189,39 @@ async function updateGithubStats() {
     ]);
 
     const publicRepoCount = Number(profile.public_repos);
+    const accountAge = getGithubAccountAge(profile.created_at);
     const starCount = Array.isArray(repos)
       ? repos.reduce((total, repo) => total + (Number(repo.stargazers_count) || 0), 0)
       : 0;
 
     renderGithubRepos(repos);
+    setStatText('githubAccountAge', accountAge === null
+      ? '--'
+      : `${accountAge} ${accountAge === 1 ? 'yr' : 'yrs'}`);
     setStatText('githubRepoCount', publicRepoCount);
     setStatText('githubStarCount', starCount);
   } catch (error) {
     portfolioStats.title = 'GitHub stats are temporarily unavailable.';
     renderGithubRepoStatus('Repositories are temporarily unavailable.');
   }
+}
+
+function getGithubAccountAge(createdAt) {
+  const createdDate = new Date(createdAt);
+  if (Number.isNaN(createdDate.getTime())) return null;
+
+  const today = new Date();
+  let years = today.getUTCFullYear() - createdDate.getUTCFullYear();
+  const anniversaryHasPassed = (
+    today.getUTCMonth() > createdDate.getUTCMonth()
+    || (
+      today.getUTCMonth() === createdDate.getUTCMonth()
+      && today.getUTCDate() >= createdDate.getUTCDate()
+    )
+  );
+
+  if (!anniversaryHasPassed) years -= 1;
+  return Math.max(0, years);
 }
 
 function renderGithubRepos(repos) {

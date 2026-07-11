@@ -37,9 +37,23 @@ if (statsContainer) {
 // Reading Mode
 
 const readingModeToggle = document.getElementById('readingModeToggle');
+const readingModeStorageKey = 'portfolio-reading-mode';
 
 if (readingModeToggle) {
   let readingModeTransitionTimer;
+  let isReadingModeActive = false;
+
+  try {
+    isReadingModeActive = localStorage.getItem(readingModeStorageKey) === 'enabled';
+  } catch (error) {
+    // Keep reading mode disabled when storage is unavailable.
+  }
+
+  document.body.classList.toggle('reading-mode-active', isReadingModeActive);
+  readingModeToggle.classList.toggle('is-active', isReadingModeActive);
+  readingModeToggle.setAttribute('aria-pressed', String(isReadingModeActive));
+  readingModeToggle.querySelector('.reading-mode-toggle__text').textContent =
+    isReadingModeActive ? 'Exit Reading Mode' : 'Reading Mode';
 
   readingModeToggle.addEventListener('click', () => {
     const isActive = document.body.classList.toggle('reading-mode-active');
@@ -53,5 +67,11 @@ if (readingModeToggle) {
     readingModeToggle.classList.toggle('is-active', isActive);
     readingModeToggle.setAttribute('aria-pressed', String(isActive));
     readingModeToggle.querySelector('.reading-mode-toggle__text').textContent = isActive ? 'Exit Reading Mode' : 'Reading Mode';
+
+    try {
+      localStorage.setItem(readingModeStorageKey, isActive ? 'enabled' : 'disabled');
+    } catch (error) {
+      // Reading mode still works when storage is unavailable.
+    }
   });
 }

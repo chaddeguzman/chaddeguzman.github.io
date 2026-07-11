@@ -1055,6 +1055,22 @@ body.light-mode .hero::after {
   opacity: 1;
 }
 
+.github-repo-card--skeleton {
+  pointer-events: none;
+  background-image: linear-gradient(
+    100deg,
+    var(--surface-alt) 20%,
+    var(--accent-glow) 45%,
+    var(--surface-alt) 70%
+  );
+  background-size: 220% 100%;
+  animation: github-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.github-repo-card--skeleton::before {
+  opacity: 0.45;
+}
+
 .github-repo-meta {
   color: var(--accent-dim);
   font-size: 0.72rem;
@@ -1109,6 +1125,26 @@ body.light-mode .hero::after {
 .github-contributions .github-contribution-schedule {
   font-size: 0.78rem;
   opacity: 0.85;
+}
+
+.github-contributions .github-contribution-updated {
+  color: var(--accent-dim);
+  font-size: 0.78rem;
+}
+
+.github-contribution-summary--loading {
+  width: min(19rem, 75vw);
+  min-height: 1.1rem;
+  border-radius: 4px;
+  color: transparent !important;
+  background-image: linear-gradient(
+    100deg,
+    var(--surface-mid) 20%,
+    var(--accent-glow) 45%,
+    var(--surface-mid) 70%
+  );
+  background-size: 220% 100%;
+  animation: github-skeleton-shimmer 1.4s ease-in-out infinite;
 }
 
 .github-heatmap-wrap {
@@ -1168,6 +1204,38 @@ body.light-mode .hero::after {
   grid-auto-flow: column;
   gap: var(--heatmap-cell-gap);
   min-width: max-content;
+}
+
+.github-contributions.is-loading .github-heatmap-grid {
+  width: 45rem;
+  height: 6.5rem;
+  border-radius: 4px;
+  background-image: linear-gradient(
+    100deg,
+    var(--surface-mid) 20%,
+    var(--accent-glow) 45%,
+    var(--surface-mid) 70%
+  );
+  background-size: 220% 100%;
+  animation: github-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes github-skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .github-repo-card--skeleton,
+  .github-contribution-summary--loading,
+  .github-contributions.is-loading .github-heatmap-grid {
+    animation: none;
+  }
 }
 
 .github-heatmap-cell {

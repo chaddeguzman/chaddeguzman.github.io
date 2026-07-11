@@ -489,19 +489,26 @@
         chaddeguzman.github.io
       </a>.
     </p>
-    <div class="github-repo-list" id="githubRepoList">
-      <p class="github-repo-status">Loading repositories...</p>
+    <div class="github-repo-list" id="githubRepoList" aria-busy="true">
+      <div class="github-repo-card github-repo-card--skeleton" aria-hidden="true"></div>
+      <div class="github-repo-card github-repo-card--skeleton" aria-hidden="true"></div>
+      <div class="github-repo-card github-repo-card--skeleton" aria-hidden="true"></div>
+      <div class="github-repo-card github-repo-card--skeleton" aria-hidden="true"></div>
     </div>
 
     <div
-      class="github-contributions"
+      class="github-contributions is-loading"
       id="githubContributionPanel"
       data-contributions-src="assets/data/github-contributions.json"
+      aria-busy="true"
     >
       <div class="github-contributions-header">
         <div>
           <h3>Yearly Contributions</h3>
-          <p id="githubContributionSummary">Loading contribution activity...</p>
+          <p class="github-contribution-summary--loading" id="githubContributionSummary">
+            Loading contribution activity...
+          </p>
+          <p class="github-contribution-updated" id="githubContributionUpdated" hidden></p>
           <p class="github-contribution-schedule" id="githubContributionSchedule">
             A daily workflow refreshes contribution data at 03:00 UTC.
           </p>
@@ -692,7 +699,11 @@
       aria-expanded="false"
       title="Drag to move or click to open ChadBot"
     >
-      <span class="chadbot-launcher-icon" aria-hidden="true">C</span>
+      <span class="chadbot-launcher-dots" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
     </button>
   </div>
 

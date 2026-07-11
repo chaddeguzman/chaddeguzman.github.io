@@ -7,18 +7,19 @@
   position: fixed;
   right: calc(2rem + 110px);
   top: calc(1.25rem + 125px);
-  width: 3.75rem;
-  height: 3.75rem;
+  width: 4.25rem;
+  height: 4.1rem;
   z-index: 180;
   font-family: var(--font-body);
   color: var(--ink);
 }
 
 .chadbot-launcher {
-  width: 3.75rem;
-  height: 3.75rem;
+  position: relative;
+  width: 4.25rem;
+  height: 3.25rem;
   border: 1px solid var(--border-mid);
-  border-radius: 50%;
+  border-radius: 1.15rem 1.15rem 1.15rem 0.45rem;
   background: #314e31;
   color: #d7dcd2;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28), 0 0 24px var(--accent-glow);
@@ -28,6 +29,18 @@
   touch-action: none;
   user-select: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.chadbot-launcher::after {
+  content: '';
+  position: absolute;
+  left: 0.42rem;
+  bottom: -0.75rem;
+  width: 1.35rem;
+  height: 0.9rem;
+  background: #314e31;
+  clip-path: polygon(0 0, 100% 0, 18% 100%);
+  pointer-events: none;
 }
 
 .chadbot-dragging .chadbot-launcher {
@@ -62,10 +75,47 @@
   outline-offset: 3px;
 }
 
-.chadbot-launcher-icon {
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1;
+.chadbot-launcher-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.32rem;
+}
+
+.chadbot-launcher-dots span {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: currentColor;
+  animation: chadbot-launcher-dot 1.6s ease-in-out infinite;
+}
+
+.chadbot-launcher-dots span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.chadbot-launcher-dots span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes chadbot-launcher-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-0.18rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chadbot-launcher-dots span {
+    animation: none;
+  }
 }
 
 .chadbot-panel[hidden] {

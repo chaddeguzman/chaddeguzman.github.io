@@ -4,10 +4,26 @@
 const themeToggle = document.getElementById('themeToggle');
 const rootElement = document.documentElement;
 const body = document.body;
+const themeStorageKey = 'portfolio-theme';
+
+try {
+  const savedTheme = localStorage.getItem(themeStorageKey);
+  const isLightMode = savedTheme === 'light';
+  body.classList.toggle('light-mode', isLightMode);
+  rootElement.classList.toggle('light-mode', isLightMode);
+} catch (error) {
+  // Keep the default theme when storage is unavailable.
+}
 
 themeToggle.addEventListener('click', () => {
   const isLightMode = body.classList.toggle('light-mode');
   rootElement.classList.toggle('light-mode', isLightMode);
+
+  try {
+    localStorage.setItem(themeStorageKey, isLightMode ? 'light' : 'dark');
+  } catch (error) {
+    // Theme switching still works when storage is unavailable.
+  }
 });
 
 
@@ -190,6 +206,8 @@ function renderGithubRepos(repos) {
   const repoList = document.getElementById('githubRepoList');
   if (!repoList || !Array.isArray(repos)) return;
 
+  repoList.setAttribute('aria-busy', 'false');
+
   const visibleRepos = repos.filter(repo => (
     !repo.fork && repo.name !== 'chaddeguzman.github.io'
   ));
@@ -224,6 +242,7 @@ function renderGithubRepoStatus(message) {
   if (!repoList) return;
 
   repoList.innerHTML = '';
+  repoList.setAttribute('aria-busy', 'false');
   repoList.appendChild(createRepoCardText('p', 'github-repo-status', message));
 }
 
@@ -268,6 +287,7 @@ async function updateGithubContributionStat() {
 
 async function renderGithubContributions() {
   const summary = document.getElementById('githubContributionSummary');
+  const updated = document.getElementById('githubContributionUpdated');
   const monthRow = document.getElementById('githubHeatmapMonths');
   const grid = document.getElementById('githubHeatmapGrid');
 
@@ -278,6 +298,7 @@ async function renderGithubContributions() {
     let weeks = Array.isArray(data.weeks) ? data.weeks : [];
     const total = Number(data.totalContributions) || 0;
     setStatText('githubContributionCount', total);
+    renderGithubContributionUpdated(updated, data.generatedAt);
 
     if (!weeks.length) {
       weeks = buildEmptyContributionYear(new Date().getFullYear());
@@ -295,11 +316,31 @@ async function renderGithubContributions() {
       `Total of ${total.toLocaleString()} contributions`,
       `from ${formatContributionRange(data.from, data.to)}`
     ].join(' ');
-    grid.setAttribute('aria-label', `${total.toLocaleString()} GitHub contributions in the last year.`);
+    grid.setAttribute(
+      'aria-label',
+      `${total.toLocaleString()} GitHub contributions in the current calendar year.`
+    );
   } catch (error) {
     summary.textContent = 'Contribution activity is temporarily unavailable.';
     grid.setAttribute('aria-label', 'GitHub contribution activity is temporarily unavailable.');
+  } finally {
+    summary.classList.remove('github-contribution-summary--loading');
+    githubContributionPanel.classList.remove('is-loading');
+    githubContributionPanel.setAttribute('aria-busy', 'false');
   }
+}
+
+function renderGithubContributionUpdated(element, generatedAt) {
+  if (!element || !generatedAt) return;
+
+  const generatedDate = new Date(generatedAt);
+  if (Number.isNaN(generatedDate.getTime())) return;
+
+  element.textContent = `Last updated ${generatedDate.toLocaleString(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  })}`;
+  element.hidden = false;
 }
 
 function renderGithubContributionSchedule() {

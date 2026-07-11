@@ -1251,20 +1251,20 @@ body.light-mode .hero::after {
 }
 
 .github-heatmap-cell[data-level="1"] {
-  background: #b5eaaa;
+  background: #033a16;
 }
 
 .github-heatmap-cell[data-level="2"] {
-  background: #8fdc8f;
+  background: #196c2e;
 }
 
 .github-heatmap-cell[data-level="3"] {
-  background: #6fd06f;
+  background: #2ea043;
 }
 
 .github-heatmap-cell[data-level="4"] {
-  background: #238636;
-  box-shadow: 0 0 8px rgba(35, 134, 54, 0.38);
+  background: #56d364;
+  box-shadow: 0 0 8px rgba(86, 211, 100, 0.38);
 }
 
 body.light-mode .github-heatmap-cell {
@@ -1277,20 +1277,20 @@ body.light-mode .github-heatmap-cell[data-level="0"] {
 }
 
 body.light-mode .github-heatmap-cell[data-level="1"] {
-  background: #a4e19b;
+  background: #033a16;
 }
 
 body.light-mode .github-heatmap-cell[data-level="2"] {
-  background: #8bcf83;
+  background: #196c2e;
 }
 
 body.light-mode .github-heatmap-cell[data-level="3"] {
-  background: #3f9b45;
+  background: #2ea043;
 }
 
 body.light-mode .github-heatmap-cell[data-level="4"] {
-  background: #126821;
-  box-shadow: 0 0 8px rgba(18, 104, 33, 0.25);
+  background: #56d364;
+  box-shadow: 0 0 8px rgba(86, 211, 100, 0.25);
 }
 
 .github-heatmap-legend {

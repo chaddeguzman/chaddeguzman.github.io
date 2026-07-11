@@ -134,6 +134,7 @@ const githubContributionPanel = document.getElementById('githubContributionPanel
 let githubContributionsDataPromise = null;
 
 if (githubContributionPanel) {
+  renderGithubContributionSchedule();
   renderGithubContributions();
 }
 
@@ -299,6 +300,31 @@ async function renderGithubContributions() {
     summary.textContent = 'Contribution activity is temporarily unavailable.';
     grid.setAttribute('aria-label', 'GitHub contribution activity is temporarily unavailable.');
   }
+}
+
+function renderGithubContributionSchedule() {
+  const schedule = document.getElementById('githubContributionSchedule');
+  if (!schedule) return;
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  const today = new Date();
+  const utcRunTime = new Date(Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate(),
+    3
+  ));
+  const localRunTime = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZone
+  }).format(utcRunTime);
+
+  schedule.textContent = [
+    'A daily workflow refreshes contribution data at 03:00 UTC',
+    `(${localRunTime} ${timeZone}).`
+  ].join(' ');
 }
 
 function getGithubContributionsData() {

@@ -1106,6 +1106,11 @@ body.light-mode .hero::after {
   font-size: 0.86rem;
 }
 
+.github-contributions .github-contribution-schedule {
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
 .github-heatmap-wrap {
   overflow-x: auto;
   overflow-y: hidden;

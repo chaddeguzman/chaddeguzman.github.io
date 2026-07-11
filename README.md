@@ -50,9 +50,10 @@ static files produced by the deployment workflow.
 |   |-- chat_api.js                      # Gemini configuration, prompts, requests, and parsing
 |   |-- script.js                        # Chat UI, memory, limits, dragging, and message handling
 |   `-- style.css                        # ChadBot presentation and responsive styles
-|-- features.js                          # Animated counters and reading mode
+|-- scripts/
+|   |-- features.js                      # Animated counters and reading mode
+|   `-- script.js                        # Portfolio UI and GitHub data rendering
 |-- index.html                           # Portfolio content and page structure
-|-- script.js                            # Portfolio UI and GitHub data rendering
 `-- README.md
 ```
 
@@ -118,8 +119,8 @@ commit generated data and dispatch a fresh Pages deployment.
 
 - Edit portfolio content and section markup in `index.html`.
 - Update the main design tokens and responsive layout in `assets/style.css`.
-- Modify reading mode in `assets/features.css` and `features.js`.
-- Adjust GitHub rendering and contribution display behavior in `script.js`.
+- Modify reading mode in `assets/features.css` and `scripts/features.js`.
+- Adjust GitHub rendering and contribution display behavior in `scripts/script.js`.
 - Update ChadBot instructions and model configuration in `chatbot/chat_api.js`.
 - Update ChadBot interaction behavior and client-side limits in `chatbot/script.js`.
 

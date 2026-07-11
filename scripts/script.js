@@ -253,10 +253,12 @@ function createRepoCardText(tagName, className, text) {
   return element;
 }
 
-async function fetchGithubJson(url) {
+async function fetchGithubJson(url, options = {}) {
   const response = await fetch(url, {
+    ...options,
     headers: {
-      Accept: 'application/vnd.github+json'
+      Accept: 'application/vnd.github+json',
+      ...options.headers
     }
   });
 
@@ -373,7 +375,7 @@ function getGithubContributionsData() {
     || 'assets/data/github-contributions.json';
 
   if (!githubContributionsDataPromise) {
-    githubContributionsDataPromise = fetchGithubJson(source);
+    githubContributionsDataPromise = fetchGithubJson(source, { cache: 'no-store' });
   }
 
   return githubContributionsDataPromise;

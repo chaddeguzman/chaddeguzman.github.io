@@ -38,6 +38,7 @@ static files produced by the deployment workflow.
 ```text
 .
 |-- .github/workflows/
+|   |-- deploy-after-contributions.yml   # Delays Pages deployment after contribution updates
 |   |-- deploy-pages.yml                 # Builds and deploys the static Pages artifact
 |   `-- update-github-contributions.yml  # Refreshes contribution data every day
 |-- assets/
@@ -98,7 +99,10 @@ API. Contribution data follows a separate automated flow:
 2. The workflow requests the current calendar year from GitHub's GraphQL API.
 3. It writes the result to `assets/data/github-contributions.json` and commits changed data to
    `main`.
-4. It dispatches the Pages deployment workflow so the refreshed heatmap is published.
+4. After the update workflow succeeds, `deploy-after-contributions.yml` waits ten minutes for the
+   new `main` commit to propagate.
+5. The follow-up workflow dispatches `deploy-pages.yml` from `main` so the refreshed heatmap is
+   published without racing the preceding push.
 
 The displayed total covers the current calendar year, which may differ from the rolling one-year
 total shown on a GitHub profile. GitHub may also start scheduled workflows a few minutes late.
@@ -112,8 +116,8 @@ Pages. The workflow requires these repository permissions:
 - Write GitHub Pages deployments
 - Issue an OpenID Connect identity token
 
-The contribution workflow requires write access to repository contents and Actions so it can
-commit generated data and dispatch a fresh Pages deployment.
+The contribution workflow requires write access to repository contents. The delayed follow-up
+workflow requires Actions write access so it can dispatch a fresh Pages deployment.
 
 ## Customization
 

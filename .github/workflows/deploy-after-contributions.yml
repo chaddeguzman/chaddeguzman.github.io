@@ -1,0 +1,28 @@
+name: Deploy Pages After Contribution Update
+
+on:
+  workflow_run:
+    workflows:
+      - Update GitHub Contributions
+    types:
+      - completed
+
+permissions:
+  actions: write
+
+concurrency:
+  group: delayed-contribution-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy-after-delay:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the updated main branch to propagate
+        run: sleep 600
+
+      - name: Dispatch Pages deployment from main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-pages.yml --ref main --repo "${GITHUB_REPOSITORY}"

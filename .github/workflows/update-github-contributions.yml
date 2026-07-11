@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
   contents: write
 
 jobs:
@@ -144,29 +143,3 @@ jobs:
           git add assets/data/github-contributions.json
           git commit -m "Update GitHub contribution data"
           git push
-
-      - name: Dispatch Pages deployment
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python - <<'PY'
-          import json
-          import os
-          import urllib.request
-
-          token = os.environ["GITHUB_TOKEN"]
-          repository = os.environ["GITHUB_REPOSITORY"]
-          request = urllib.request.Request(
-            f"https://api.github.com/repos/{repository}/actions/workflows/deploy-pages.yml/dispatches",
-            data=json.dumps({"ref": "main"}).encode("utf-8"),
-            headers={
-              "Authorization": f"Bearer {token}",
-              "Content-Type": "application/json",
-              "Accept": "application/vnd.github+json"
-            },
-            method="POST"
-          )
-
-          with urllib.request.urlopen(request):
-            pass
-          PY

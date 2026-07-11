@@ -1,4 +1,8 @@
-// --- Google Gemini API configuration ---
+// =============================================================================
+// Gemini API Configuration
+// =============================================================================
+
+// GitHub Actions replaces this placeholder with CHADBOT_API during deployment.
 const API_KEY = '__CHADBOT_API__';
 const MODEL_NAME = 'gemini-3.1-flash-lite';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
@@ -13,14 +17,19 @@ const API_QUOTA_MESSAGE = [
   'Please try again later.'
 ].join(' ');
 
-// --- Build Gemini Prompt ---
+// =============================================================================
+// Prompt Construction
+// =============================================================================
+
 function buildPortfolioInstructions(portfolioContext = '', memoryContext = '') {
   const instructions =
+    // Identity and authoritative portfolio scope.
     'You are ChadBot, the professional portfolio assistant for Chad De Guzman. ' +
     'Use the portfolio content below as the authoritative source for Chad\'s professional ' +
     'background. Answer questions about his profile, skills, experience, projects, education, ' +
     'AI work, and contact details in a clear and helpful way. Speak about Chad in the third person. ' +
 
+    // Questions about ChadBot and its implementation.
     'You may also answer questions about this chatbot\'s own implementation when the ' +
     'visitor asks about "this chatbot", "ChadBot", "the API", "Gemini", or how the assistant ' +
     'works. ChadBot is embedded in Chad\'s portfolio as a browser-based floating chat assistant. ' +
@@ -33,6 +42,7 @@ function buildPortfolioInstructions(portfolioContext = '', memoryContext = '') {
     'ChadBot uses, say it uses Google\'s Gemini API; if asked whether Chad works with APIs ' +
     'professionally, answer from the portfolio content. Keep implementation answers high-level. ' +
 
+    // Privacy, response style, and level of technical detail.
     'You may mention the AI model, the Gemini API, and the general process of building a portfolio ' +
     'assistant, but do not reveal repository files, script names, folder names, constants, code ' +
     'paths, deployment secret names, or exact step-by-step implementation details, even if the ' +
@@ -41,6 +51,7 @@ function buildPortfolioInstructions(portfolioContext = '', memoryContext = '') {
     'Avoid unnecessary technical jargon; when a technical term is important, briefly explain what it ' +
     'means and why it matters. Lead with the direct answer and include only the most relevant details.' +
 
+    // Memory use, formatting, factual accuracy, and fallback behavior.
     'Provide a longer or more technical explanation only when the visitor explicitly asks for more detail. ' +
     'Use saved visitor memory only when it helps answer the current question ' +
     'naturally, such as remembering the visitor\'s name, role, or preferences. Do not mention ' +
@@ -68,14 +79,18 @@ VISITOR QUESTION
 ${userInput}`;
 }
 
-// --- Parse Gemini JSON Response ---
+// =============================================================================
+// Response Parsing and Error Handling
+// =============================================================================
+
+// Gemini can wrap requested JSON in a Markdown code fence, so remove it first.
 function parseGeminiJson(data) {
   const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
   const clean = raw.replace(/```json|```/g, '').trim();
   return JSON.parse(clean);
 }
 
-// --- Parse Gemini Text Response ---
+// Combine every returned text part into one reply.
 function parseGeminiText(data) {
   return data?.candidates?.[0]?.content?.parts
     ?.map(part => part.text || '')
@@ -84,6 +99,7 @@ function parseGeminiText(data) {
 }
 
 function createApiError(response, data) {
+  // Hide provider quota details behind a visitor-friendly message.
   if (response.status === 429) {
     return new Error(API_QUOTA_MESSAGE);
   }
@@ -91,7 +107,11 @@ function createApiError(response, data) {
   return new Error(data?.error?.message || 'API request failed');
 }
 
-// --- Main Gemini Function ---
+// =============================================================================
+// One-Off Gemini Requests
+// =============================================================================
+
+// Sends a standalone prompt and returns Gemini's complete response object.
 async function askGemini(prompt, options = {}) {
   if (API_KEY_PLACEHOLDERS.has(API_KEY)) {
     throw new Error(API_KEY_NOT_CONFIGURED_MESSAGE);
@@ -127,13 +147,13 @@ async function askGemini(prompt, options = {}) {
   return data;
 }
 
-// --- Main Gemini Text Function ---
+// Convenience wrapper for callers that only need plain text.
 async function askGeminiText(prompt, options = {}) {
   const data = await askGemini(prompt, options);
   return parseGeminiText(data);
 }
 
-// --- Main Gemini JSON Function ---
+// Convenience wrapper that asks Gemini for JSON and parses the result.
 async function askGeminiJson(prompt, options = {}) {
   const data = await askGemini(prompt, {
     ...options,
@@ -143,14 +163,19 @@ async function askGeminiJson(prompt, options = {}) {
   return parseGeminiJson(data);
 }
 
-// --- Main Gemini Chat Function ---
+// =============================================================================
+// Stateful Chat Sessions
+// =============================================================================
+
 function createGeminiChat(options = {}) {
+  // Keep a private copy so each chat instance owns its conversation history.
   const history = [...(options.history || [])];
   const portfolioContext = options.portfolioContext || '';
   let memoryContext = options.memoryContext || '';
 
   return {
     history,
+    // Refresh saved visitor details without recreating the chat instance.
     updateMemoryContext(nextMemoryContext = '') {
       memoryContext = nextMemoryContext;
     },
@@ -201,7 +226,10 @@ function createGeminiChat(options = {}) {
   };
 }
 
-// --- Export for Browser, Node, or n8n ---
+// =============================================================================
+// Public API and Environment Exports
+// =============================================================================
+
 const GeminiApi = {
   API_KEY,
   API_URL,
@@ -219,9 +247,11 @@ const GeminiApi = {
 };
 
 if (typeof window !== 'undefined') {
+  // Browser usage by chatbot/script.js.
   window.GeminiApi = GeminiApi;
 }
 
 if (typeof module !== 'undefined' && module.exports) {
+  // Node.js usage for scripts and tests.
   module.exports = GeminiApi;
 }

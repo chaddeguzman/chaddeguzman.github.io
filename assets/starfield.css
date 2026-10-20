@@ -1,0 +1,63 @@
+/* Keep existing section colors below the sky, and content above it.
+   Navigation and ChadBot keep their own, higher stacking levels. */
+body.portfolio-stars-active > section {
+  z-index: auto;
+}
+
+body.portfolio-stars-active > section > *,
+body.portfolio-stars-active > .footer,
+body.portfolio-stars-active > .section-divider {
+  position: relative;
+  z-index: 2;
+}
+
+body.portfolio-stars-active > .about-section::before,
+body.portfolio-stars-active > .experience-section::before,
+body.portfolio-stars-active > .j4f-teaser-section::before,
+body.portfolio-stars-active > .contact-section::before {
+  z-index: 0;
+}
+
+.portfolio-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+}
+
+.portfolio-sky canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.portfolio-star {
+  position: absolute;
+  width: var(--star-size);
+  height: var(--star-size);
+  opacity: var(--star-opacity);
+  background: white;
+  border-radius: 50%;
+  animation: none;
+  transition: none;
+}
+
+.portfolio-star--sparkle {
+  border-radius: 0;
+  background:
+    linear-gradient(transparent, white, transparent) center / 1px 100% no-repeat,
+    linear-gradient(90deg, transparent, white, transparent) center / 100% 1px no-repeat;
+}
+
+@media (max-width: 760px) {
+  .portfolio-star:nth-child(n + 61) { display: none; }
+}
+
+@media print {
+  .portfolio-sky { display: none; }
+}
